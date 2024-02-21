@@ -11,10 +11,10 @@ public class Triangle{
     
     public static int VERTICES=3;
     
-    private int height;
-    private int width;
-    private int xPosition;
-    private int yPosition;
+    private double height;
+    private double width;
+    private double xPosition;
+    private double yPosition;
     private String color;
     private boolean isVisible;
 
@@ -23,12 +23,22 @@ public class Triangle{
      */
     public Triangle(){
         height = 30;
-        width = 40;
+        width = 40.5;
         xPosition = 140;
         yPosition = 15;
         color = "green";
         isVisible = false;
     }
+    
+    public Triangle(double nHeight, double nWidth, double nX, double nY){
+        height = nHeight;
+        width = nWidth;
+        xPosition = nX;
+        yPosition = nY;
+        color = "green";
+        isVisible = false;
+    }
+    
 
     /**
      * Make this triangle visible. If it was already visible, do nothing.
@@ -78,7 +88,7 @@ public class Triangle{
      * Move the triangle horizontally.
      * @param distance the desired distance in pixels
      */
-    public void moveHorizontal(int distance){
+    public void moveHorizontal(double distance){
         erase();
         xPosition += distance;
         draw();
@@ -88,7 +98,7 @@ public class Triangle{
      * Move the triangle vertically.
      * @param distance the desired distance in pixels
      */
-    public void moveVertical(int distance){
+    public void moveVertical(double distance){
         erase();
         yPosition += distance;
         draw();
@@ -139,7 +149,7 @@ public class Triangle{
      * @param newHeight the new height in pixels. newHeight must be >=0.
      * @param newWidht the new width in pixels. newWidht must be >=0.
      */
-    public void changeSize(int newHeight, int newWidth) {
+    public void changeSize(double newHeight, double newWidth) {
         erase();
         height = newHeight;
         width = newWidth;
@@ -162,8 +172,8 @@ public class Triangle{
     private void draw(){
         if(isVisible) {
             Canvas canvas = Canvas.getCanvas();
-            int[] xpoints = { xPosition, xPosition + (width/2), xPosition - (width/2) };
-            int[] ypoints = { yPosition, yPosition + height, yPosition + height };
+            int[] xpoints = { (int)xPosition, (int)xPosition + (int)(width/2), (int)xPosition - (int)(width/2) };
+            int[] ypoints = { (int)yPosition, (int)yPosition + (int)height, (int)yPosition + (int)height };
             canvas.draw(this, color, new Polygon(xpoints, ypoints, 3));
             canvas.wait(10);
         }

@@ -26,6 +26,14 @@ public class Circle{
         color = "blue";
         isVisible = false;
     }
+    
+    public Circle(int nX, int nY){
+        diameter = 10;
+        xPosition = nX;
+        yPosition = nY;
+        color = "black";
+        isVisible = false;
+    }
 
 
        

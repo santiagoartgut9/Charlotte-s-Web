@@ -13,10 +13,10 @@ public class Rectangle{
 
     public static int EDGES = 4;
     
-    private int height;
-    private int width;
-    private int xPosition;
-    private int yPosition;
+    private double height;
+    private double width;
+    private double xPosition;
+    private double yPosition;
     private String color;
     private boolean isVisible;
 
@@ -30,6 +30,27 @@ public class Rectangle{
         yPosition = 15;
         color = "magenta";
         isVisible = false;
+    }
+    
+    /**
+     * Create a new rectangle at specific position with default color.
+     */
+    public Rectangle(double nX, double nY){
+        height = 30;
+        width = 40;
+        xPosition = nX;
+        yPosition = nY;
+        color = "magenta";
+        isVisible = false;
+    }
+    
+    
+    public double getHeight(){
+        return height;
+    }
+    
+    public double getWidth(){
+        return width;
     }
     
 
@@ -81,7 +102,7 @@ public class Rectangle{
      * Move the rectangle horizontally.
      * @param distance the desired distance in pixels
      */
-    public void moveHorizontal(int distance){
+    public void moveHorizontal(double distance){
         erase();
         xPosition += distance;
         draw();
@@ -91,7 +112,7 @@ public class Rectangle{
      * Move the rectangle vertically.
      * @param distance the desired distance in pixels
      */
-    public void moveVertical(int distance){
+    public void moveVertical(double distance){
         erase();
         yPosition += distance;
         draw();
@@ -142,7 +163,7 @@ public class Rectangle{
      * @param newHeight the new height in pixels. newHeight must be >=0.
      * @param newWidht the new width in pixels. newWidth must be >=0.
      */
-    public void changeSize(int newHeight, int newWidth) {
+    public void changeSize(double newHeight, double newWidth) {
         erase();
         height = newHeight;
         width = newWidth;
@@ -167,8 +188,8 @@ public class Rectangle{
         if(isVisible) {
             Canvas canvas = Canvas.getCanvas();
             canvas.draw(this, color,
-                new java.awt.Rectangle(xPosition, yPosition, 
-                                       width, height));
+                new java.awt.Rectangle((int)xPosition, (int)yPosition, 
+                                       (int)width, (int)height));
             canvas.wait(10);
         }
     }
