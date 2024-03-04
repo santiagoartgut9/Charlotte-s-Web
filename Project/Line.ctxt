@@ -1,0 +1,22 @@
+#BlueJ class context
+comment0.target=Line
+comment0.text=\r\n\ A\ line\ that\ can\ be\ manipulated\ and\ that\ draws\ itself\ on\ a\ canvas.\r\n\ \r\n\ @Author\:\ Sebastian\ Galvis\ Briceno\r\n\ @Author\:\ Santiago\ Arteaga\r\n
+comment1.params=nXZero\ nYZero\ nXFinal\ nYFinal
+comment1.target=Line(double,\ double,\ double,\ double)
+comment1.text=\r\n\ Create\ a\ line\ with\ a\ specific\ starting\ point\ and\ a\ final\ one\r\n
+comment2.params=
+comment2.target=void\ makeVisible()
+comment2.text=\r\n\ Make\ this\ line\ visible.\ If\ it\ was\ already\ visible,\ do\ nothing.\r\n
+comment3.params=
+comment3.target=void\ makeInvisible()
+comment3.text=\r\n\ Make\ this\ line\ invisible.\ If\ it\ was\ already\ invisible,\ do\ nothing.\r\n
+comment4.params=newColor
+comment4.target=void\ changeColor(java.lang.String)
+comment4.text=\r\n\ Change\ the\ color.\ \r\n\ @param\ color\ the\ new\ color.\ Valid\ colors\ are\ "red",\ "yellow",\ "blue",\ "green",\r\n\ "magenta"\ and\ "black".\r\n
+comment5.params=
+comment5.target=void\ draw()
+comment5.text=\r\n\ Draw\ the\ triangle\ with\ current\ specifications\ on\ screen.\r\n
+comment6.params=
+comment6.target=void\ erase()
+comment6.text=\r\n\ Erase\ the\ triangle\ on\ screen.\r\n
+numComments=7
