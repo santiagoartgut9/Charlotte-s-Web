@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * The Web of the Spider Web
@@ -10,8 +11,8 @@ import java.util.ArrayList;
 public class Web{
     
     private ArrayList<Strand> strands = new ArrayList<>();
-    public static ArrayList<Point> bridgePoints = new ArrayList<>();
-    public static ArrayList<Point> spotPoints = new ArrayList<>();
+    //public static HashMap<String, Bridge> bridges = new HashMap<>();
+    public static HashMap<String, Point> spots = new HashMap<>();
     private Point origin;
     private boolean isVisible;
     
@@ -72,10 +73,6 @@ public class Web{
             }
         }
         
-        for (double angulo : coordinates) {
-            System.out.println(angulo);
-        }
-        
         int longitud = angles.size();
         int cont = 0;
         for (int i = 0; i < longitud ; i++) {
@@ -85,7 +82,9 @@ public class Web{
         }
     }
     
-    
+    public void addSpot(String color, int strand){
+        strands.get(strand).addSpot(color);
+    }
     
     /**
      * Make this line visible. If it was already visible, do nothing.
@@ -123,7 +122,7 @@ public class Web{
             for(Strand s : strands){
                 s.makeInvisible();
             }
-            origin.makeInvisible(); // investigar por qué no se va
+            origin.makeInvisible();
         }
     }
 }

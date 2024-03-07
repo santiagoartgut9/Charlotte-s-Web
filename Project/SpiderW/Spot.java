@@ -5,26 +5,19 @@
  * @Author: Santiago Arteaga
  */
 
-public class Strand{
+public class Spot{
     
-    private Line line;
-    private Point finalP;
+    private Point point;
     private boolean isVisible;
-    private Spot spot;
     
     /**
      * Create a line with a specific starting point and a final one
      */
-    public Strand(Point startingPoint, Point finalPoint){
-        line = new Line(startingPoint, finalPoint, "black");
-        finalP = finalPoint;
-        
+    public Spot(String color, Point _point){
+        point = _point;
+        point.changeColor(color);
+        Web.spots.put(color, point);
         isVisible = false;
-    }
-    
-    public void addSpot(String color){
-        spot = new Spot(color, finalP);
-        spot.makeVisible();
     }
     
     /**
@@ -48,10 +41,7 @@ public class Strand{
      */
     private void draw(){
         if(isVisible) {
-            line.makeVisible();
-            if(spot!=null) {
-                spot.makeVisible();
-            }
+            point.makeVisible();
         }
     }
 
@@ -60,10 +50,7 @@ public class Strand{
      */
     private void erase(){
         if(isVisible) {
-            line.makeInvisible();
-            if(spot!=null) {
-                spot.makeInvisible();
-            }
+            point.makeInvisible();
         }
     }
 }

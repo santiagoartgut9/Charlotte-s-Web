@@ -69,8 +69,8 @@ public class Point
      * Makes the point's representation invisible
      */
     public void makeInvisible(){
-        isVisible = false;
         erase();
+        isVisible = false;
     }
     
     /**
