@@ -6,4 +6,4 @@ AUTHORS: Sebastian Galvis Briceno & Santiago Arteaga
 USER INSTRUCTIONS: n/a
 
 ANNOTATIONS: 
-1. He have to reduce the lenght of the fillStrands() methon on Web, it is coming in upcoming updates.
+1. He have to reduce the lenght of the fillStrands() method on Web class, it is coming in next updates.
