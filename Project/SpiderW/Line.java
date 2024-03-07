@@ -9,24 +9,20 @@ import java.awt.*;
 
 public class Line{
     
-    public static int VERTICES=3;
-    
-    private double xZero;
-    private double yZero;
-    private double xFinal;
-    private double yFinal;
+    private Point[] points;
     private String color;
     private boolean isVisible;
     
     /**
      * Create a line with a specific starting point and a final one
      */
-    public Line(double nXZero, double nYZero, double nXFinal, double nYFinal){
-        xZero = nXZero;
-        yZero = nYZero;
-        xFinal = nXFinal;
-        yFinal = nYFinal;
-        color = "black";
+    public Line(Point startingPoint, Point finalPoint, String color){
+        points = new Point[2];
+        points[0] = startingPoint;
+        points[1] = finalPoint;
+        
+        changeColor(color);
+        
         isVisible = false;
     }
     
@@ -62,8 +58,8 @@ public class Line{
     private void draw(){
         if(isVisible) {
             Canvas canvas = Canvas.getCanvas();
-            int[] xpoints = { (int)xZero, (int)xFinal };
-            int[] ypoints = { (int)yZero, (int)yFinal };
+            int[] xpoints = { (int)points[0].xCoordinate(), (int)points[1].xCoordinate() };
+            int[] ypoints = { (int)points[0].yCoordinate(), (int)points[1].yCoordinate() };
             canvas.draw(this, color, new Polygon(xpoints, ypoints, 2));
             canvas.wait(10);
         }

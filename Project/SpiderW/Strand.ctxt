@@ -1,0 +1,19 @@
+#BlueJ class context
+comment0.target=Strand
+comment0.text=\r\n\ A\ Strand\ for\ the\ Spider\ Web\r\n\ \r\n\ @Author\:\ Sebastian\ Galvis\ Briceno\r\n\ @Author\:\ Santiago\ Arteaga\r\n
+comment1.params=startingPoint\ finalPoint
+comment1.target=Strand(Point,\ Point)
+comment1.text=\r\n\ Create\ a\ line\ with\ a\ specific\ starting\ point\ and\ a\ final\ one\r\n
+comment2.params=
+comment2.target=void\ makeVisible()
+comment2.text=\r\n\ Make\ this\ line\ visible.\ If\ it\ was\ already\ visible,\ do\ nothing.\r\n
+comment3.params=
+comment3.target=void\ makeInvisible()
+comment3.text=\r\n\ Make\ this\ line\ invisible.\ If\ it\ was\ already\ invisible,\ do\ nothing.\r\n
+comment4.params=
+comment4.target=void\ draw()
+comment4.text=\r\n\ Draw\ the\ triangle\ with\ current\ specifications\ on\ screen.\r\n
+comment5.params=
+comment5.target=void\ erase()
+comment5.text=\r\n\ Erase\ the\ triangle\ on\ screen.\r\n
+numComments=6

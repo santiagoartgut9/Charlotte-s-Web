@@ -1,0 +1,21 @@
+#BlueJ class context
+comment0.target=Web
+comment0.text=\r\n\ The\ Web\ of\ the\ Spider\ Web\r\n\ \r\n\ @Author\:\ Sebastian\ Galvis\ Briceno\r\n\ @Author\:\ Santiago\ Arteaga\r\n
+comment1.params=_strands\ radius
+comment1.target=Web(int,\ int)
+comment1.text=\r\n\ Create\ a\ line\ with\ a\ specific\ starting\ point\ and\ a\ final\ one\r\n
+comment2.params=_strands\ radius
+comment2.target=void\ fillStrands(int,\ double)
+comment3.params=
+comment3.target=void\ makeVisible()
+comment3.text=\r\n\ Make\ this\ line\ visible.\ If\ it\ was\ already\ visible,\ do\ nothing.\r\n
+comment4.params=
+comment4.target=void\ makeInvisible()
+comment4.text=\r\n\ Make\ this\ line\ invisible.\ If\ it\ was\ already\ invisible,\ do\ nothing.\r\n
+comment5.params=
+comment5.target=void\ draw()
+comment5.text=\r\n\ Draw\ the\ triangle\ with\ current\ specifications\ on\ screen.\r\n
+comment6.params=
+comment6.target=void\ erase()
+comment6.text=\r\n\ Erase\ the\ triangle\ on\ screen.\r\n
+numComments=7

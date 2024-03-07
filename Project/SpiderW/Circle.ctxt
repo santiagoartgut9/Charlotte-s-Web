@@ -1,0 +1,34 @@
+#BlueJ class context
+comment0.target=Circle
+comment0.text=\r\n\ A\ circle\ that\ can\ be\ manipulated\ and\ that\ draws\ itself\ on\ a\ canvas.\r\n\ \r\n\ @author\ \ Michael\ Kolling\ and\ David\ J.\ Barnes\r\n\ @version\ 1.0.\ \ (15\ July\ 2000)\ \r\n\ @modified\ (03\ March\ 2024)\ by\ Sebastian\ Galvis\ &\ Santiago\ Arteaga\r\n
+comment1.params=
+comment1.target=Circle()
+comment10.params=distance
+comment10.target=void\ slowMoveVertical(int)
+comment10.text=\r\n\ Slowly\ move\ the\ circle\ vertically\r\n\ @param\ distance\ the\ desired\ distance\ in\ pixels\r\n
+comment11.params=newDiameter
+comment11.target=void\ changeSize(int)
+comment11.text=\r\n\ Change\ the\ size.\r\n\ @param\ newDiameter\ the\ new\ size\ (in\ pixels).\ Size\ must\ be\ >\=0.\r\n
+comment12.params=newColor
+comment12.target=void\ changeColor(java.lang.String)
+comment12.text=\r\n\ Change\ the\ color.\ \r\n\ @param\ color\ the\ new\ color.\ Valid\ colors\ are\ "red",\ "yellow",\ "blue",\ "green",\r\n\ "magenta"\ and\ "black".\r\n
+comment2.params=xCoord\ yCoord\ _color
+comment2.target=Circle(double,\ double,\ java.lang.String)
+comment3.params=
+comment3.target=void\ makeVisible()
+comment4.params=
+comment4.target=void\ makeInvisible()
+comment5.params=
+comment5.target=void\ draw()
+comment6.params=
+comment6.target=void\ erase()
+comment7.params=distance
+comment7.target=void\ moveHorizontal(int)
+comment7.text=\r\n\ Move\ the\ circle\ horizontally.\r\n\ @param\ distance\ the\ desired\ distance\ in\ pixels\r\n
+comment8.params=distance
+comment8.target=void\ moveVertical(int)
+comment8.text=\r\n\ Move\ the\ circle\ vertically.\r\n\ @param\ distance\ the\ desired\ distance\ in\ pixels\r\n
+comment9.params=distance
+comment9.target=void\ slowMoveHorizontal(int)
+comment9.text=\r\n\ Slowly\ move\ the\ circle\ horizontally.\r\n\ @param\ distance\ the\ desired\ distance\ in\ pixels\r\n
+numComments=13
