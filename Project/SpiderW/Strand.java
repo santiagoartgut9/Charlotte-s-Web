@@ -49,6 +49,40 @@ public class Strand{
         Web.bridges.put(color, bridgesLocal.get((bridgesLocal.size())-1));
     }
     
+    /**
+     * Checks if the color of any of its bridges is the specified, false other case
+     */
+    public boolean checkBridge(String color){
+        if(bridgesLocal.size()>0) {
+                for(Bridge b : bridgesLocal){
+                    if(b.checkBridge(color)){
+                        return true;
+                    }
+                }
+            }
+        return false;
+    }
+    
+    /**
+     * Deletes a Bridge from the simulator
+     */
+    public void delBridge(String color){
+        for(Bridge b : bridgesLocal){
+            if(b.checkBridge(color)){
+                b.makeInvisible();
+                bridgesLocal.remove(b);
+                break;
+            }
+        }
+    }
+    
+    /**
+     * Relocates a bridge from the simulator
+     */
+    public void relocateBridge(String color, int distance){
+        delBridge(color);
+        addBridge(color, distance);
+    }
     
     /**
      * Adds a Spot to the simulator

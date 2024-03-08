@@ -37,6 +37,30 @@ public class Web{
     }
     
     /**
+     * Deletes a bridge from the simulator
+     */
+    public void delBridge(String color){
+        bridges.remove(color);
+        for(Strand s : strands){
+            if(s.checkBridge(color)){
+                s.delBridge(color);
+            }
+        }
+    }
+    
+    /**
+     * Relocates a bridge from the simulator
+     */
+    public void relocateBridge(String color, int distance){
+        bridges.remove(color);
+        for(Strand s : strands){
+            if(s.checkBridge(color)){
+                s.relocateBridge(color, distance);
+            }
+        }
+    }
+    
+    /**
      * Adds a spot to the simulator
      */
     public void addSpot(String color, int strand){
