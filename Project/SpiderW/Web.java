@@ -6,6 +6,7 @@ import java.util.HashMap;
  * 
  * @Author: Sebastian Galvis Briceno
  * @Author: Santiago Arteaga
+ * @version (03 March 2024)
  */
 
 public class Web{
@@ -13,11 +14,13 @@ public class Web{
     private ArrayList<Strand> strands = new ArrayList<>();
     public static HashMap<String, Bridge> bridges = new HashMap<>();
     public static HashMap<String, Point> spots = new HashMap<>();
-    private Point origin;
+    public static Point origin;
     private boolean isVisible;
     
+    
+    
     /**
-     * Create a line with a specific starting point and a final one
+     * Create the web with a specific quantity of strands and a radius
      */
     public Web(int _strands, int radius){
         origin = new Point(427, 240);
@@ -26,7 +29,52 @@ public class Web{
         isVisible = false;
     }
     
-    public void fillStrands(int _strands, double radius){ // IMPORTANTE DIVIDIR ENTRE MÁS MÉTODOS, ESTE ESTÁ MUY LARGO
+    /**
+     * Adds a bridge to the simulator
+     */
+    public void addBridge(String color, int distance, int firstStrand){
+        strands.get(firstStrand).addBridge(color, distance);
+    }
+    
+    /**
+     * Adds a spot to the simulator
+     */
+    public void addSpot(String color, int strand){
+        strands.get(strand).addSpot(color);
+    }
+    
+    /**
+     * Deletes a spot from the simulator
+     */
+    public void delSpot(String color){
+        spots.remove(color);
+        for(Strand s : strands){
+            if(s.checkSpot(color)){
+                s.delSpot();
+            }
+        }
+    }
+    
+    /**
+     * Make the Web visible. If it was already visible, do nothing.
+     */
+    public void makeVisible(){
+        isVisible = true;
+        draw();
+    }
+    
+    /**
+     * Make the Web invisible. If it was already invisible, do nothing.
+     */
+    public void makeInvisible(){
+        erase();
+        isVisible = false;
+    }
+    
+    /**
+     * Fill the strands ArrayList with each strand of the web
+     */
+    public void fillStrands(int _strands, double radius){ // Pese a que ocupa una pantalla, podría ocupar menos si se divide bien
         double alpha = 2*Math.PI/_strands;
         double limit = 2 * Math.PI;
         
@@ -39,38 +87,8 @@ public class Web{
         ArrayList<Double> coordinates = new ArrayList<>();
 
         for (double angle : angles){
-            if( angle > 0 && angle < Math.PI/2){
-                coordinates.add((radius*Math.cos(angle))+427);
-                coordinates.add(240-(radius*Math.sin(angle)));
-            }
-            else if( angle > Math.PI/2 && angle < Math.PI){
-                coordinates.add(427-(radius*Math.cos(Math.PI-angle)));
-                coordinates.add(240-(radius*Math.sin(Math.PI-angle)));
-            }
-            else if( angle > Math.PI/2 && angle < 3*Math.PI/2){
-                coordinates.add(427-(radius*Math.cos(angle-Math.PI)));
-                coordinates.add(240+(radius*Math.sin(angle-Math.PI)));
-            }
-            else if( angle > 3*Math.PI/2){
-                coordinates.add(427+(radius*Math.cos(2*Math.PI-angle)));
-                coordinates.add(240+(radius*Math.sin(2*Math.PI-angle)));
-            }
-            else if( angle == 0){
-                coordinates.add(427+radius);
-                coordinates.add(240.);
-            }
-            else if( angle == Math.PI/2){
-                coordinates.add(427.);
-                coordinates.add(240-radius);
-            }
-            else if( angle == Math.PI){
-                coordinates.add(427-radius);
-                coordinates.add(240.);
-            }
-            else if( angle == 3*Math.PI/2){
-                coordinates.add(427.);
-                coordinates.add(240+radius);
-            }
+            coordinates.add(calculateHorizontal(angle, radius));
+            coordinates.add(calculateVertical(angle, radius));
         }
         
         int longitud = angles.size();
@@ -81,42 +99,11 @@ public class Web{
             cont = cont + 2;
         }
     }
-    
-    public void addBridge(String color, int distance, int firstStrand){
-        strands.get(firstStrand).addBridge(color, distance);
-    }
-    
-    public void addSpot(String color, int strand){
-        strands.get(strand).addSpot(color);
-    }
-    
-    public void delSpot(String color){
-        spots.remove(color);
-        for(Strand s : strands){
-            if(s.checkSpot(color)){
-                s.delSpot();
-            }
-        }
-    }
-    
-    /**
-     * Make this line visible. If it was already visible, do nothing.
-     */
-    public void makeVisible(){
-        isVisible = true;
-        draw();
-    }
-    
-    /**
-     * Make this line invisible. If it was already invisible, do nothing.
-     */
-    public void makeInvisible(){
-        erase();
-        isVisible = false;
-    }
 
+    
+    
     /*
-     * Draw the triangle with current specifications on screen.
+     * Draw the Web with current specifications on screen.
      */
     private void draw(){
         if(isVisible) {
@@ -128,7 +115,7 @@ public class Web{
     }
 
     /*
-     * Erase the triangle on screen.
+     * Erase the Web on screen.
      */
     private void erase(){
         if(isVisible) {
@@ -137,5 +124,61 @@ public class Web{
             }
             origin.makeInvisible();
         }
+    }
+    
+    
+    
+    /**
+     * Calculate the vertical coordinate of a vector with his angle and radius
+     */
+    public static double calculateVertical(double angle, double radius){
+        double base = origin.yCoordinate();
+        double answer = 0;
+        if( angle > 0 && angle < Math.PI/2){
+                answer = (base-(radius*Math.sin(angle)));
+            }
+            else if( angle > Math.PI/2 && angle < Math.PI){
+                answer = (base-(radius*Math.sin(Math.PI-angle)));
+            }
+            else if( angle > Math.PI/2 && angle < 3*Math.PI/2){
+                answer = (base+(radius*Math.sin(angle-Math.PI)));
+            }
+            else if( angle > 3*Math.PI/2){
+                answer = (base+(radius*Math.sin(2*Math.PI-angle)));
+            }
+            else if( angle == 0 || angle == Math.PI ){
+                answer = (base);
+            }
+            else if(angle == Math.PI/2 || angle == 3*Math.PI/2){
+                answer = base+(-1*Math.cos(angle-(Math.PI/2)))*radius;
+            }
+        return answer;
+    }
+    
+    /**
+     * Calculate the horizontal coordinate of a vector with his angle and radius
+     */
+    public static double calculateHorizontal(double angle, double radius){
+        double base = origin.xCoordinate();
+        double answer = 0;
+        if( angle > 0 && angle < Math.PI/2){
+            answer = ((radius*Math.cos(angle))+base);
+        }
+        else if( angle > Math.PI/2 && angle < Math.PI){
+            answer = (base-(radius*Math.cos(Math.PI-angle)));
+        }
+        else if( angle > Math.PI/2 && angle < 3*Math.PI/2){
+            answer = (base-(radius*Math.cos(angle-Math.PI)));
+        }
+        else if( angle > 3*Math.PI/2){
+            answer = (base+(radius*Math.cos(2*Math.PI-angle)));
+        }
+        else if(angle == 0 || angle == Math.PI){
+            answer = base+(Math.cos(angle)*radius);
+        }
+        else if( angle == Math.PI/2 || angle == 3*Math.PI/2){
+            answer = (base);
+        }
+        return answer;
     }
 }

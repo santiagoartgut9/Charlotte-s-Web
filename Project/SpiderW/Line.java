@@ -5,6 +5,7 @@ import java.awt.*;
  * 
  * @Author: Sebastian Galvis Briceno
  * @Author: Santiago Arteaga
+ * @version (03 March 2024)
  */
 
 public class Line{

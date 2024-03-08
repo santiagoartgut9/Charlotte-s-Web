@@ -1,6 +1,6 @@
 #BlueJ class context
 comment0.target=Line
-comment0.text=\r\n\ A\ line\ that\ can\ be\ manipulated\ and\ that\ draws\ itself\ on\ a\ canvas.\r\n\ \r\n\ @Author\:\ Sebastian\ Galvis\ Briceno\r\n\ @Author\:\ Santiago\ Arteaga\r\n
+comment0.text=\r\n\ A\ line\ that\ can\ be\ manipulated\ and\ that\ draws\ itself\ on\ a\ canvas.\r\n\ \r\n\ @Author\:\ Sebastian\ Galvis\ Briceno\r\n\ @Author\:\ Santiago\ Arteaga\r\n\ @version\ (03\ March\ 2024)\r\n
 comment1.params=startingPoint\ finalPoint\ color
 comment1.target=Line(Point,\ Point,\ java.lang.String)
 comment1.text=\r\n\ Create\ a\ line\ with\ a\ specific\ starting\ point\ and\ a\ final\ one\r\n\ @Param\ startingPoint\ its\ a\ point\ than\ .....\r\n

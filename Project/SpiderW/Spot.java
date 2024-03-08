@@ -1,8 +1,9 @@
 /**
- * A Strand for the Spider Web
+ * A Spot for the Spider Web
  * 
  * @Author: Sebastian Galvis Briceno
  * @Author: Santiago Arteaga
+ * @version (03 March 2024)
  */
 
 public class Spot{
@@ -22,6 +23,9 @@ public class Spot{
         isVisible = false;
     }
     
+    /**
+     * Checks if the color of the actual spot its the specified, false in other case.
+     */
     public boolean checkSpot(String _color){
         if(color == _color){
             return true;
@@ -30,7 +34,7 @@ public class Spot{
     }
     
     /**
-     * Make this line visible. If it was already visible, do nothing.
+     * Make this spot visible. If it was already visible, do nothing.
      */
     public void makeVisible(){
         isVisible = true;
@@ -38,7 +42,7 @@ public class Spot{
     }
     
     /**
-     * Make this line invisible. If it was already invisible, do nothing.
+     * Make this spot invisible. If it was already invisible, do nothing.
      */
     public void makeInvisible(){
         erase();
@@ -46,7 +50,7 @@ public class Spot{
     }
 
     /*
-     * Draw the triangle with current specifications on screen.
+     * Draw the spot with current specifications on screen.
      */
     private void draw(){
         if(isVisible) {
@@ -55,7 +59,7 @@ public class Spot{
     }
 
     /*
-     * Erase the triangle on screen.
+     * Erase the spot on screen.
      */
     private void erase(){
         if(isVisible) {

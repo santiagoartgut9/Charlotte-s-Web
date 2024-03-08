@@ -13,7 +13,7 @@ public class Bridge{
     private String color;
 
     /**
-     * Constructor for objects of class Bridge
+     * Create a bridge with a starting and final point, and a color
      */
     public Bridge(Point startingPoint, Point finalPoint, String _color){
         points = new Point[2];
@@ -27,7 +27,9 @@ public class Bridge{
         isVisible = false;
     }
     
-    
+    /**
+     * Checks if the color of the bridge is the specified, false other case
+     */
     public boolean checkBridge(String _color){
         if(color == _color){
             return true;
@@ -36,7 +38,7 @@ public class Bridge{
     }
     
     /**
-     * Make this line visible. If it was already visible, do nothing.
+     * Make this bridge visible. If it was already visible, do nothing
      */
     public void makeVisible(){
         isVisible = true;
@@ -44,7 +46,7 @@ public class Bridge{
     }
     
     /**
-     * Make this line invisible. If it was already invisible, do nothing.
+     * Make this bridge invisible. If it was already invisible, do nothing.
      */
     public void makeInvisible(){
         erase();
@@ -52,7 +54,7 @@ public class Bridge{
     }
 
     /*
-     * Draw the triangle with current specifications on screen.
+     * Draw the bridge with current specifications on screen.
      */
     private void draw(){
         if(isVisible) {
@@ -64,7 +66,7 @@ public class Bridge{
     }
 
     /*
-     * Erase the triangle on screen.
+     * Erase the bridge on screen.
      */
     private void erase(){
         if(isVisible) {

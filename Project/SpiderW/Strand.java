@@ -1,9 +1,10 @@
 import java.util.ArrayList;
 /**
- * A Strand for the Spider Web
+ * Strand Class for the Spider Web
  * 
  * @Author: Sebastian Galvis Briceno
  * @Author: Santiago Arteaga
+ * @version (03 March 2024)
  */
 
 public class Strand{
@@ -17,7 +18,7 @@ public class Strand{
     private ArrayList<Bridge> bridgesLocal = new ArrayList<>();
     
     /**
-     * Create a line with a specific starting point and a final one
+     * Create a Strand with a specific starting point and a final one, almacenates the angle of the strand and the initial alpha
      */
     public Strand(Point startingPoint, Point finalPoint, double _angle, double _alpha){
         line = new Line(startingPoint, finalPoint, "black");
@@ -28,12 +29,15 @@ public class Strand{
         isVisible = false;
     }
     
+    /**
+     * Adds a Bridge to the simulator
+     */
     public void addBridge(String color, int distance){
         double radius = distance;
-        double x1 = calculateHorizontal(angle, radius);
-        double x2 = calculateHorizontal(angle+alpha, radius);
-        double y1 = calculateVertical(angle, radius);
-        double y2 = calculateVertical(angle+alpha, radius);
+        double x1 = Web.calculateHorizontal(angle, radius);
+        double x2 = Web.calculateHorizontal(angle+alpha, radius);
+        double y1 = Web.calculateVertical(angle, radius);
+        double y2 = Web.calculateVertical(angle+alpha, radius);
         
         Point bridgeInitialPoint = new Point(x1, y1);
         Point bridgeFinalPoint = new Point(x2, y2);
@@ -45,57 +49,18 @@ public class Strand{
         Web.bridges.put(color, bridgesLocal.get((bridgesLocal.size())-1));
     }
     
-    private double calculateHorizontal(double angle, double radius){
-        double answer = 0;
-        if( angle > 0 && angle < Math.PI/2){
-            answer = ((radius*Math.cos(angle))+427);
-        }
-        else if( angle > Math.PI/2 && angle < Math.PI){
-            answer = (427-(radius*Math.cos(Math.PI-angle)));
-        }
-        else if( angle > Math.PI/2 && angle < 3*Math.PI/2){
-            answer = (427-(radius*Math.cos(angle-Math.PI)));
-        }
-        else if( angle > 3*Math.PI/2){
-            answer = (427+(radius*Math.cos(2*Math.PI-angle)));
-        }
-        else if(angle == 0 || angle == Math.PI){
-            answer = 427+(Math.cos(angle)*radius);
-        }
-        else if( angle == Math.PI/2 || angle == 3*Math.PI/2){
-            answer = (427.);
-        }
-        return answer;
-    }
     
-    private double calculateVertical(double angle, double radius){
-        double answer = 0;
-        if( angle > 0 && angle < Math.PI/2){
-                answer = (240-(radius*Math.sin(angle)));
-            }
-            else if( angle > Math.PI/2 && angle < Math.PI){
-                answer = (240-(radius*Math.sin(Math.PI-angle)));
-            }
-            else if( angle > Math.PI/2 && angle < 3*Math.PI/2){
-                answer = (240+(radius*Math.sin(angle-Math.PI)));
-            }
-            else if( angle > 3*Math.PI/2){
-                answer = (240+(radius*Math.sin(2*Math.PI-angle)));
-            }
-            else if( angle == 0 || angle == Math.PI ){
-                answer = (240.);
-            }
-            else if(angle == Math.PI/2 || angle == 3*Math.PI/2){
-                answer = 240+(-1*Math.cos(angle-(Math.PI/2)))*radius;
-            }
-        return answer;
-    }
-    
+    /**
+     * Adds a Spot to the simulator
+     */
     public void addSpot(String color){
         spot = new Spot(color, finalP);
         spot.makeVisible();
     }
     
+    /**
+     * Checks if the color of the spot is the specified, false other case
+     */
     public boolean checkSpot(String color){
         if(spot!=null) {
                 return spot.checkSpot(color);
@@ -103,6 +68,9 @@ public class Strand{
         return false;
     }
     
+    /**
+     * Deletes a Spot from the simulator
+     */
     public void delSpot(){
         if(spot!=null) {
                 spot.makeInvisible();
@@ -111,7 +79,7 @@ public class Strand{
     }
     
     /**
-     * Make this line visible. If it was already visible, do nothing.
+     * Make this Strand visible. If it was already visible, do nothing.
      */
     public void makeVisible(){
         isVisible = true;
@@ -119,7 +87,7 @@ public class Strand{
     }
     
     /**
-     * Make this line invisible. If it was already invisible, do nothing.
+     * Make this Strand invisible. If it was already invisible, do nothing.
      */
     public void makeInvisible(){
         erase();
@@ -127,7 +95,7 @@ public class Strand{
     }
 
     /*
-     * Draw the triangle with current specifications on screen.
+     * Draw the strand with current specifications on screen.
      */
     private void draw(){
         if(isVisible) {
@@ -142,7 +110,7 @@ public class Strand{
     }
 
     /*
-     * Erase the triangle on screen.
+     * Erase the strand on screen.
      */
     private void erase(){
         if(isVisible) {
