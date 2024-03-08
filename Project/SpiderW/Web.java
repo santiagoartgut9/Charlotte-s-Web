@@ -11,7 +11,7 @@ import java.util.HashMap;
 public class Web{
     
     private ArrayList<Strand> strands = new ArrayList<>();
-    //public static HashMap<String, Bridge> bridges = new HashMap<>();
+    public static HashMap<String, Bridge> bridges = new HashMap<>();
     public static HashMap<String, Point> spots = new HashMap<>();
     private Point origin;
     private boolean isVisible;
@@ -77,9 +77,13 @@ public class Web{
         int cont = 0;
         for (int i = 0; i < longitud ; i++) {
             Point finalPoint = new Point (coordinates.get(cont), coordinates.get(cont+1));
-            strands.add(new Strand(origin, finalPoint));
+            strands.add(new Strand(origin, finalPoint,angles.get(i), alpha));
             cont = cont + 2;
         }
+    }
+    
+    public void addBridge(String color, int distance, int firstStrand){
+        strands.get(firstStrand).addBridge(color, distance);
     }
     
     public void addSpot(String color, int strand){

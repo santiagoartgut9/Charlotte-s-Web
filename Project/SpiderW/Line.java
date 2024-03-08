@@ -15,6 +15,7 @@ public class Line{
     
     /**
      * Create a line with a specific starting point and a final one
+     * @Param startingPoint its a point than .....
      */
     public Line(Point startingPoint, Point finalPoint, String color){
         points = new Point[2];

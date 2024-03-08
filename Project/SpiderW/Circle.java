@@ -19,7 +19,9 @@ public class Circle{
     private String color;
     private boolean isVisible;
     
-
+    /**
+     * Default constructor for circle
+     */
     public Circle(){
         diameter = 30;
         xPosition = 20;
@@ -28,6 +30,12 @@ public class Circle{
         isVisible = false;
     }
     
+    /**
+     * New constructor for circle
+     * @param  xCoord  the coordinate on x of the circle
+     * @param  yCoord  the coordinate on x of the circle
+     * @param  _color  the color of the circle
+     */
     public Circle(double xCoord, double yCoord, String _color){
         diameter = 10;
         xPosition = xCoord-5;
@@ -37,18 +45,25 @@ public class Circle{
     }
 
 
-       
+    /**
+     * Make this circle visible. If it was already visible, do nothing.
+     */
     public void makeVisible(){
         isVisible = true;
         draw();
     }
     
+    /**
+     * Make this line invisible. If it was already invisible, do nothing.
+     */
     public void makeInvisible(){
         erase();
         isVisible = false;
     }
 
-    
+    /*
+     * Draw the circle with current specifications on screen.
+     */
     private void draw(){
         if(isVisible) {
             Canvas canvas = Canvas.getCanvas();
@@ -58,7 +73,10 @@ public class Circle{
             canvas.wait(10);
         }
     }
-
+    
+    /*
+     * Erase the circle on screen.
+     */
     private void erase(){
         if(isVisible) {
             Canvas canvas = Canvas.getCanvas();

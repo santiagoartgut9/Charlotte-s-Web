@@ -20,6 +20,9 @@ public class Bridge{
         points[0] = startingPoint;
         points[1] = finalPoint;
         color = _color;
+        for(Point p : points){
+            p.changeColor(color);
+        }
         line = new Line(startingPoint, finalPoint, color);
         isVisible = false;
     }
