@@ -1,28 +1,31 @@
-/**
- * A Strand for the Spider Web
- * 
- * @Author: Sebastian Galvis Briceno
- * @Author: Santiago Arteaga
- */
 
-public class Spot{
-    
-    private Point point;
-    private String color;
+/**
+ * Write a description of class Bridge here.
+ * 
+ * @author (your name) 
+ * @version (a version number or a date)
+ */
+public class Bridge{
+
+    private Point[] points;
+    private Line line;
     private boolean isVisible;
-    
+    private String color;
+
     /**
-     * Create a line with a specific starting point and a final one
+     * Constructor for objects of class Bridge
      */
-    public Spot(String _color, Point _point){
-        point = _point;
+    public Bridge(Point startingPoint, Point finalPoint, String _color){
+        points = new Point[2];
+        points[0] = startingPoint;
+        points[1] = finalPoint;
         color = _color;
-        point.changeColor(color);
-        Web.spots.put(color, point);
+        line = new Line(startingPoint, finalPoint, color);
         isVisible = false;
     }
     
-    public boolean checkSpot(String _color){
+    
+    public boolean checkBridge(String _color){
         if(color == _color){
             return true;
         }
@@ -50,7 +53,10 @@ public class Spot{
      */
     private void draw(){
         if(isVisible) {
-            point.makeVisible();
+            for(Point p : points){
+                p.makeVisible();
+            }
+            line.makeVisible();
         }
     }
 
@@ -59,7 +65,10 @@ public class Spot{
      */
     private void erase(){
         if(isVisible) {
-            point.makeInvisible();
+            for(Point p : points){
+                p.makeInvisible();
+            }
+            line.makeInvisible();
         }
     }
 }

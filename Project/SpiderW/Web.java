@@ -86,6 +86,15 @@ public class Web{
         strands.get(strand).addSpot(color);
     }
     
+    public void delSpot(String color){
+        spots.remove(color);
+        for(Strand s : strands){
+            if(s.checkSpot(color)){
+                s.delSpot();
+            }
+        }
+    }
+    
     /**
      * Make this line visible. If it was already visible, do nothing.
      */

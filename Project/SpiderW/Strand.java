@@ -22,9 +22,29 @@ public class Strand{
         isVisible = false;
     }
     
+    
+    public void addBridge(String color, int distance){
+        double radius = distance;
+        
+    }
+    
     public void addSpot(String color){
         spot = new Spot(color, finalP);
         spot.makeVisible();
+    }
+    
+    public boolean checkSpot(String color){
+        if(spot!=null) {
+                return spot.checkSpot(color);
+            }
+        return false;
+    }
+    
+    public void delSpot(){
+        if(spot!=null) {
+                spot.makeInvisible();
+                spot = null;
+            }
     }
     
     /**

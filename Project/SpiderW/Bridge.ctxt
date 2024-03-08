@@ -1,11 +1,11 @@
 #BlueJ class context
-comment0.target=Spot
-comment0.text=\r\n\ A\ Strand\ for\ the\ Spider\ Web\r\n\ \r\n\ @Author\:\ Sebastian\ Galvis\ Briceno\r\n\ @Author\:\ Santiago\ Arteaga\r\n
-comment1.params=_color\ _point
-comment1.target=Spot(java.lang.String,\ Point)
-comment1.text=\r\n\ Create\ a\ line\ with\ a\ specific\ starting\ point\ and\ a\ final\ one\r\n
+comment0.target=Bridge
+comment0.text=\r\n\ Write\ a\ description\ of\ class\ Bridge\ here.\r\n\ \r\n\ @author\ (your\ name)\ \r\n\ @version\ (a\ version\ number\ or\ a\ date)\r\n
+comment1.params=startingPoint\ finalPoint\ _color
+comment1.target=Bridge(Point,\ Point,\ java.lang.String)
+comment1.text=\r\n\ Constructor\ for\ objects\ of\ class\ Bridge\r\n
 comment2.params=_color
-comment2.target=boolean\ checkSpot(java.lang.String)
+comment2.target=boolean\ checkBridge(java.lang.String)
 comment3.params=
 comment3.target=void\ makeVisible()
 comment3.text=\r\n\ Make\ this\ line\ visible.\ If\ it\ was\ already\ visible,\ do\ nothing.\r\n
