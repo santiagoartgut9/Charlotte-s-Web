@@ -16,12 +16,21 @@ public class Line{
     
     /**
      * Create a line with a specific starting point and a final one
-     * @Param startingPoint its a point than .....
+     * @Param startingPoint its the initial point of the line
+     * @Param finalPoint its the final point of the line
+     * @Param color is the color of the line
      */
     public Line(Point startingPoint, Point finalPoint, String color){
         points = new Point[2];
-        points[0] = startingPoint;
-        points[1] = finalPoint;
+        
+        if(startingPoint.yCoordinate() <= finalPoint.xCoordinate()){
+            points [0] = startingPoint;
+            points [1] = finalPoint;
+        }
+        else{
+            points[0] = finalPoint;
+            points[1] = startingPoint;
+        }
         
         changeColor(color);
         
@@ -53,9 +62,41 @@ public class Line{
         color = newColor;
         draw();
     }
+    
+    /**
+     * Move the line to a specific coordinate.
+     * @param xPosition is the x coordinate where to move
+     * @Param yPosition is the y coordinate where to move
+     */
+    public void moveTo(double xPosition, double yPosition){
+        erase();
 
+        double deltaX = xPosition - points[0].xCoordinate();
+        double deltaY = yPosition - points[0].yCoordinate();
+
+        points[0].moveTo(xPosition, yPosition);
+        points[1].moveTo(points[1].xCoordinate() + deltaX, points[1].yCoordinate() + deltaY);
+
+        draw();
+    }
+    
+    /**
+     * Obtains the x coordinate of the line
+     */
+    public double xCoordinate(){
+        return points[0].xCoordinate();
+    }
+    
+    /**
+     * Obtains the y coordinate of the line
+     */
+    public double yCoordinate(){
+        return points[0].yCoordinate();
+    }
+    
+    
     /*
-     * Draw the triangle with current specifications on screen.
+     * Draw the line with current specifications on screen.
      */
     private void draw(){
         if(isVisible) {
@@ -68,7 +109,7 @@ public class Line{
     }
 
     /*
-     * Erase the triangle on screen.
+     * Erase the line on screen.
      */
     private void erase(){
         if(isVisible) {

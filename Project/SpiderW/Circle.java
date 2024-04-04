@@ -38,8 +38,23 @@ public class Circle{
      */
     public Circle(double xCoord, double yCoord, String _color){
         diameter = 10;
-        xPosition = xCoord-5;
-        yPosition = yCoord-5;
+        xPosition = xCoord-(diameter/2);
+        yPosition = yCoord-(diameter/2);
+        color = _color;
+        isVisible = false;
+    }
+    
+    /**
+     * New constructor for circle
+     * @param  xCoord  the coordinate on x of the circle
+     * @param  yCoord  the coordinate on x of the circle
+     * @param  _color  the color of the circle
+     * @param _diameter the diameter of the circle
+     */
+    public Circle(double xCoord, double yCoord, String _color, double _diameter){
+        diameter = _diameter;
+        xPosition = xCoord-(diameter/2);
+        yPosition = yCoord-(diameter/2);
         color = _color;
         isVisible = false;
     }
@@ -60,31 +75,6 @@ public class Circle{
         erase();
         isVisible = false;
     }
-
-    /*
-     * Draw the circle with current specifications on screen.
-     */
-    private void draw(){
-        if(isVisible) {
-            Canvas canvas = Canvas.getCanvas();
-            canvas.draw(this, color, 
-                new Ellipse2D.Double((int)xPosition, (int)yPosition, 
-                (int)diameter, (int)diameter));
-            canvas.wait(10);
-        }
-    }
-    
-    /*
-     * Erase the circle on screen.
-     */
-    private void erase(){
-        if(isVisible) {
-            Canvas canvas = Canvas.getCanvas();
-            canvas.erase(this);
-        }
-    }
-    
-    
     
     /**
      * Move the circle horizontally.
@@ -153,19 +143,69 @@ public class Circle{
     public void changeSize(int newDiameter){
         erase();
         diameter = newDiameter;
+        //xPosition = xPosition-(diameter/2);
+        //yPosition = yPosition-(diameter/2);
         draw();
     }
 
     /**
      * Change the color. 
-     * @param color the new color. Valid colors are "red", "yellow", "blue", "green",
+     * @param newColor the new color. Valid colors are "red", "yellow", "blue", "green",
      * "magenta" and "black".
      */
     public void changeColor(String newColor){
         color = newColor;
         draw();
     }
-
-
+    
+    /**
+     * Move the circle to a specific coordinate.
+     * @param xCoord the x coordinate where to move
+     * @param yCoord the y coordinate where to move
+     */
+    public void moveTo(double xCoord, double yCoord){
+        erase();
+        xPosition = xCoord;
+        yPosition = yCoord;
+        draw();
+    }
+    
+    /**
+     * Obtains the x coordinate of the circle
+     */
+    public double xCoordinate(){
+        return xPosition;
+    }
+    
+    /**
+     * Obtains the y coordinate of the circle
+     */
+    public double yCoordinate(){
+        return yPosition;
+    }
+    
+    
+    /*
+     * Draw the circle with current specifications on screen.
+     */
+    private void draw(){
+        if(isVisible) {
+            Canvas canvas = Canvas.getCanvas();
+            canvas.draw(this, color, 
+                new Ellipse2D.Double((int)xPosition, (int)yPosition, 
+                (int)diameter, (int)diameter));
+            canvas.wait(10);
+        }
+    }
+    
+    /*
+     * Erase the circle on screen.
+     */
+    private void erase(){
+        if(isVisible) {
+            Canvas canvas = Canvas.getCanvas();
+            canvas.erase(this);
+        }
+    }
 
 }

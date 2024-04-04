@@ -13,7 +13,9 @@ public class Spot{
     private boolean isVisible;
     
     /**
-     * Create a line with a specific starting point and a final one
+     * Create a spot with a specific starting point and a final one
+     * @param _color the color of the spot
+     * @param _point the position in the screen
      */
     public Spot(String _color, Point _point){
         point = _point;
@@ -25,6 +27,7 @@ public class Spot{
     
     /**
      * Checks if the color of the actual spot its the specified, false in other case.
+     * @param _color the color to check
      */
     public boolean checkSpot(String _color){
         if(color == _color){

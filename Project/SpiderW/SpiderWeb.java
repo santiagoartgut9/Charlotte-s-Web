@@ -14,6 +14,8 @@ public class SpiderWeb
     
     /**
      * Create the simulator with a specific quantity of strands and a radius
+     * @Param strands quantity of strands
+     * @Param radius radius of the strands
      */
     public SpiderWeb(int strands, int radius){
         web = new Web(strands, radius);
@@ -24,6 +26,9 @@ public class SpiderWeb
     
     /**
      * Adds a bridge to the simulator
+     * @Param color the color of the bridge
+     * @Param distance distance of the bridge from the origin
+     * @Param firstStrand strand who have the starting point of the bridge
      */
     public void addBridge(String color, int distance, int firstStrand){
         web.addBridge(color, distance, firstStrand);
@@ -31,6 +36,8 @@ public class SpiderWeb
     
     /**
      * Relocates a bridge from the simulator
+     * @Param color color of the bridge to relocate
+     * @Param distance distance from the origin to relocate the bridge
      */
     public void relocateBridge(String color, int distance){
         web.relocateBridge(color, distance);
@@ -38,6 +45,7 @@ public class SpiderWeb
     
     /**
      * Deletes a bridge from the simulator
+     * @Param color color of the bridge to be deleted
      */
     public void delBridge(String color){
         web.delBridge(color);
@@ -45,6 +53,8 @@ public class SpiderWeb
     
     /**
      * Adds a spot to the simulator
+     * @Param color color of the spot
+     * @Param strand strand who have the spot
      */
     public void addSpot(String color, int strand){
         web.addSpot(color, strand);
@@ -52,6 +62,7 @@ public class SpiderWeb
     
     /**
      * Deletes a spot from the simulator
+     * @Param color color of the spot
      */
     public void delSpot(String color){
         web.delSpot(color);

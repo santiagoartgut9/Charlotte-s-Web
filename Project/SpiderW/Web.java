@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+//import java.util.Map;
 
 /**
  * The Web of the Spider Web
@@ -16,28 +17,129 @@ public class Web{
     public static HashMap<String, Point> spots = new HashMap<>();
     public static Point origin;
     private boolean isVisible;
+    private Spider spider;
     
+    public void spiderSit(int strand){
+        spider.sit();
+        spider.setStrand(strands.get(strand));
+    }
     
+    private boolean spiderWalk(Bridge objective){
+        if(objective!=null){
+            Point[] directionPoints = firstLast(objective);
+            spider.switchDirection(directionPoints[0]);
+            Point position0 = spider.getPosition();
+            while(!((spider.getPosition()).equals(directionPoints[0]))){
+                spider.spiderWalk();
+            }
+            spider.switchDirection(directionPoints[1]);
+            while(!((spider.getPosition()).equals(directionPoints[1]))){
+                spider.spiderWalk();
+            }
+            Point position1 = spider.getPosition();
+            if( ((position1.xCoordinate() <= position0.xCoordinate()) && (position0.yCoordinate() <= 240)) ){
+                spider.setStrand( strands.get((strands.indexOf(spider.getStrand())) + 1) );
+            }
+            else if ( ((position1.xCoordinate() >= position0.xCoordinate()) && (position0.yCoordinate() >= 240)) ){
+                spider.setStrand( strands.get((strands.indexOf(spider.getStrand())) + 1) );
+            }
+            else { spider.setStrand( strands.get((strands.indexOf(spider.getStrand())) - 1) ); }
+            return spiderWalk(searchSpiderNearestBridge());
+        }
+        else{
+            Point direction = spider.getActualStrandSpot();
+            while(!((spider.getPosition()).equals(direction))){
+                spider.spiderWalk();
+            }
+            return true;
+        }
+    }
+    
+    public void spiderWalk(boolean advance){
+        if(advance){
+            boolean finished = spiderWalk(searchSpiderNearestBridge());
+        }
+    }
+    
+    public Bridge searchSpiderNearestBridge(){
+        int i = strands.indexOf(spider.getStrand());
+        Bridge closerBridge = null;
+        Point spiderPos = spider.getPosition();
+        
+        Strand actualStrand = strands.get(i);
+        Strand previousStrand = (i != 0) ? strands.get(i-1) : strands.get(strands.size() - 1);
+        
+        Bridge bridge1 = actualStrand.closerBridgeInStrand(spiderPos);
+        Bridge bridge2 = previousStrand.closerBridgeInNextStrand(spiderPos);
+        
+        if ( (bridge1 != null) && (bridge2 == null) ) { closerBridge = bridge1; }
+        else if ( (bridge1 == null) && (bridge2 != null) ) { closerBridge = bridge2; }
+        else if ( (bridge1 == null) && (bridge2 == null) ) { }
+        else{
+            closerBridge = ( ((bridge1.getStartingPoint()).distance(spiderPos)) <= ((bridge2.getFinalPoint()).distance(spiderPos)) ) ? bridge1 : bridge2;
+        }
+        
+        return closerBridge;
+    }
+    
+    public Point[] firstLast(Bridge bridge){
+        Point[] ordenatedPoints = new Point[2];
+        
+        Bridge closerBridge = searchSpiderNearestBridge();
+        
+        if ( (spider.getStrand()).pointInStartingBridgePoints(closerBridge.getStartingPoint()) ){
+            ordenatedPoints[0] = closerBridge.getStartingPoint();
+            ordenatedPoints[1] = closerBridge.getFinalPoint();
+        }
+        else{
+            ordenatedPoints[0] = closerBridge.getFinalPoint();
+            ordenatedPoints[1] = closerBridge.getStartingPoint();
+        }
+        
+        return ordenatedPoints;
+    }
+    
+    /**
+     * Check if a point belongs to a spot of the web
+     * @Param _point the point to check
+     */
+    public static boolean pointIsSpot(Point _point){
+        for(Point p : spots.values()){
+            if(p.equals(_point)){
+                return true;
+            }
+        }
+        
+        return false;
+    }
     
     /**
      * Create the web with a specific quantity of strands and a radius
+     * @Param _strands quantity of strands in the web
+     * @Param radius radius of the strands
      */
     public Web(int _strands, int radius){
         origin = new Point(427, 240);
         fillStrands(_strands, radius);
+        spider = new Spider(this, strands.get(0));
         
         isVisible = false;
     }
     
     /**
      * Adds a bridge to the simulator
+     * @Param color color of the bridge
+     * @Param distance the distance of the bridge from the origin
+     * @Param firstStrand the strand with the origin of the bridge
      */
     public void addBridge(String color, int distance, int firstStrand){
+        // Verificar que el puente no existe ya
         strands.get(firstStrand).addBridge(color, distance);
     }
     
     /**
      * Deletes a bridge from the simulator
+     * @Param color the color of the bridge to delete
      */
     public void delBridge(String color){
         bridges.remove(color);
@@ -50,6 +152,8 @@ public class Web{
     
     /**
      * Relocates a bridge from the simulator
+     * @Param color the color ofthe bridge to relocate
+     * @Param distance the new distance from the origin
      */
     public void relocateBridge(String color, int distance){
         bridges.remove(color);
@@ -62,13 +166,17 @@ public class Web{
     
     /**
      * Adds a spot to the simulator
+     * @Param color the color of the spot
+     * @Param strand the strand where the spot is
      */
     public void addSpot(String color, int strand){
+        // Verificar que no exista
         strands.get(strand).addSpot(color);
     }
     
     /**
      * Deletes a spot from the simulator
+     * @Param color the color of the spot to delete
      */
     public void delSpot(String color){
         spots.remove(color);
@@ -97,6 +205,8 @@ public class Web{
     
     /**
      * Fill the strands ArrayList with each strand of the web
+     * @Param _strands quantity of strands
+     * @Param radius radius of the strands
      */
     public void fillStrands(int _strands, double radius){ // Pese a que ocupa una pantalla, podría ocupar menos si se divide bien
         double alpha = 2*Math.PI/_strands;
@@ -135,6 +245,7 @@ public class Web{
                 s.makeVisible();
             }
             origin.makeVisible();
+            spider.makeVisible();
         }
     }
 
@@ -147,6 +258,7 @@ public class Web{
                 s.makeInvisible();
             }
             origin.makeInvisible();
+            spider.makeVisible();
         }
     }
     
@@ -154,6 +266,8 @@ public class Web{
     
     /**
      * Calculate the vertical coordinate of a vector with his angle and radius
+     * @Param angle the angle of the vector
+     * @Param radius the radius of the vector
      */
     public static double calculateVertical(double angle, double radius){
         double base = origin.yCoordinate();
@@ -181,6 +295,8 @@ public class Web{
     
     /**
      * Calculate the horizontal coordinate of a vector with his angle and radius
+     * @Param angle the angle of the vector
+     * @Param radius the radius of the vector
      */
     public static double calculateHorizontal(double angle, double radius){
         double base = origin.xCoordinate();

@@ -1,9 +1,9 @@
-
 /**
- * Write a description of class Bridge here.
+ * The Bridge for SpiderWeb
  * 
- * @author (your name) 
- * @version (a version number or a date)
+ * @Author: Sebastian Galvis Briceno
+ * @Author: Santiago Arteaga
+ * @version (03 March 2024)
  */
 public class Bridge{
 
@@ -14,6 +14,7 @@ public class Bridge{
 
     /**
      * Create a bridge with a starting and final point, and a color
+     * 
      */
     public Bridge(Point startingPoint, Point finalPoint, String _color){
         points = new Point[2];
@@ -52,7 +53,21 @@ public class Bridge{
         erase();
         isVisible = false;
     }
-
+    
+    /**
+     * Return the starting point of the bridge
+     */
+    public Point getStartingPoint(){
+        return points[0];
+    }
+    
+    /**
+     * Return the final point of the bridge
+     */
+    public Point getFinalPoint(){
+        return points[1];
+    }
+    
     /*
      * Draw the bridge with current specifications on screen.
      */

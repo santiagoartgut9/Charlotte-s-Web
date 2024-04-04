@@ -15,6 +15,8 @@ public class Point
     
     /**
      * Creates a point on an exact position
+     * @Param _xCoord is the x coordinate of the point
+     * @Param _yCoord is the y coordinate of the point
      */
     public Point(double _xCoord, double _yCoord){
         xCoord = _xCoord;
@@ -25,6 +27,7 @@ public class Point
     
     /**
      * Changes the color of the Point's representation
+     * @Param color is the color of the point
      */
     public void changeColor(String color){
         representation.changeColor(color);
@@ -32,6 +35,7 @@ public class Point
     
     /**
      * Obtains the distance between this point and another point
+     * @Param point the another point
      */
     public double distance(Point otherPoint){
         double answer;
@@ -74,6 +78,18 @@ public class Point
     }
     
     /**
+     * Move the point to a specific coordinate.
+     * @param xPosition the x coordinate where to move
+     * @param yPosition the y coordinate where to move
+     */
+    public void moveTo(double xPosition, double yPosition){
+        erase();
+        xCoord = xPosition;
+        yCoord = yPosition;
+        draw();
+    }
+    
+    /*
      * Draws the point's representation
      */
     private void draw(){
@@ -82,12 +98,25 @@ public class Point
         }
     }
     
-    /**
+    /*
      * Erases the point's representation
      */
     private void erase(){
         if(isVisible) {
             representation.makeInvisible();
         }
+    }
+    
+    /**
+     * 
+     */
+    public boolean equals(Point otherPoint){
+        boolean flag = false;
+        
+        if((this.xCoordinate() == otherPoint.xCoordinate()) && (this.yCoordinate() == otherPoint.yCoordinate())){
+            flag=true;
+        }
+        
+        return flag;
     }
 }
