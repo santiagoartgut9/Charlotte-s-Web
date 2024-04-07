@@ -119,4 +119,12 @@ public class Point
         
         return flag;
     }
+
+    @Override
+    public String toString() {
+        return "Point{" +
+                "x=" + xCoordinate() +
+                ", y=" + yCoordinate() +
+                '}';
+    }
 }

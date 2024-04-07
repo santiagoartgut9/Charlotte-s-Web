@@ -9,7 +9,7 @@ import java.awt.*;
  */
 
 public class Spider{
-    
+
     private Circle body;
     private Point direction;
     private Line[] legs;
@@ -228,5 +228,14 @@ public class Spider{
                 l.makeInvisible();
             }
         }
+    }
+
+    public int checkBridgePosition(Bridge bridge) {
+        if (getPosition().equals(bridge.getStartingPoint())) {
+            return 1;
+        } else if (getPosition().equals(bridge.getFinalPoint())) {
+            return 2;
+        }
+        return 0;
     }
 }

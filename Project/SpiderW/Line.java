@@ -117,4 +117,8 @@ public class Line{
             canvas.erase(this);
         }
     }
+
+    public Point getStartingPoint(){
+        return points[0];
+    }
 }

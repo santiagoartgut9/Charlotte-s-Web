@@ -1,3 +1,5 @@
+import javax.swing.plaf.synth.SynthTextAreaUI;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
 //import java.util.Map;
@@ -11,93 +13,129 @@ import java.util.HashMap;
  */
 
 public class Web{
-    
+
+    public static ArrayDeque<Object> usedBridges = new ArrayDeque<>();
     private ArrayList<Strand> strands = new ArrayList<>();
     public static HashMap<String, Bridge> bridges = new HashMap<>();
     public static HashMap<String, Point> spots = new HashMap<>();
     public static Point origin;
     private boolean isVisible;
     private Spider spider;
-    
+    private HashMap<Integer, ArrayList<Bridge>> strandBridges = new HashMap<>();
+    private int spidersit;
+    private boolean hasexecuted = false;
+
     public void spiderSit(int strand){
         spider.sit();
         spider.setStrand(strands.get(strand));
+        this.spidersit = strand;
     }
-    
-    private boolean spiderWalk(Bridge objective){
-        if(objective!=null){
-            Point[] directionPoints = firstLast(objective);
-            spider.switchDirection(directionPoints[0]);
-            Point position0 = spider.getPosition();
-            while(!((spider.getPosition()).equals(directionPoints[0]))){
-                spider.spiderWalk();
-            }
-            spider.switchDirection(directionPoints[1]);
-            while(!((spider.getPosition()).equals(directionPoints[1]))){
-                spider.spiderWalk();
-            }
-            Point position1 = spider.getPosition();
-            if( ((position1.xCoordinate() <= position0.xCoordinate()) && (position0.yCoordinate() <= 240)) ){
-                spider.setStrand( strands.get((strands.indexOf(spider.getStrand())) + 1) );
-            }
-            else if ( ((position1.xCoordinate() >= position0.xCoordinate()) && (position0.yCoordinate() >= 240)) ){
-                spider.setStrand( strands.get((strands.indexOf(spider.getStrand())) + 1) );
-            }
-            else { spider.setStrand( strands.get((strands.indexOf(spider.getStrand())) - 1) ); }
-            return spiderWalk(searchSpiderNearestBridge());
-        }
-        else{
-            Point direction = spider.getActualStrandSpot();
-            while(!((spider.getPosition()).equals(direction))){
-                spider.spiderWalk();
-            }
-            return true;
-        }
+private boolean spiderWalk1(Bridge objective){
+    if(objective!=null){
+        usedBridges.add(objective);
+        Point[] directionPoints = firstLast(objective);
+
+        // Calcula las distancias a los puntos directionPoints
+        double distanceToStart = spider.getPosition().distance(directionPoints[0]);
+        double distanceToEnd = spider.getPosition().distance(directionPoints[1]);
+
+        // Determina cuál punto está más cerca
+        Point closerPoint = (distanceToStart < distanceToEnd) ? directionPoints[0] : directionPoints[1];
+        Point fartherPoint = (distanceToStart < distanceToEnd) ? directionPoints[1] : directionPoints[0];
+
+        // Mueve la araña al punto más cercano
+        spider.moveTo(closerPoint.xCoordinate(), closerPoint.yCoordinate());
+
+        // Cambia la dirección de la araña al punto más lejano
+        spider.switchDirection(fartherPoint);
+        spider.moveTo(fartherPoint.xCoordinate(), fartherPoint.yCoordinate());
+
+        return spiderWalk1(searchSpiderNearestBridge());
     }
-    
+    else{
+        return true;
+    }
+}
+
     public void spiderWalk(boolean advance){
-        if(advance){
-            boolean finished = spiderWalk(searchSpiderNearestBridge());
+    if(advance){
+        Bridge nearestBridge = searchSpiderNearestBridge();
+        if(nearestBridge != null){
+            boolean finished = spiderWalk1(nearestBridge);
+            if(finished){
+                spiderWalk(advance);
+            }
         }
+
+    }else {
+            Strand actualStrand = spider.getStrand();
+            spider.moveTo(actualStrand.getStartingPoint().xCoordinate(), actualStrand.getStartingPoint().yCoordinate());
+        }
+
     }
-    
     public Bridge searchSpiderNearestBridge(){
-        int i = strands.indexOf(spider.getStrand());
-        Bridge closerBridge = null;
-        Point spiderPos = spider.getPosition();
-        
-        Strand actualStrand = strands.get(i);
-        Strand previousStrand = (i != 0) ? strands.get(i-1) : strands.get(strands.size() - 1);
-        
-        Bridge bridge1 = actualStrand.closerBridgeInStrand(spiderPos);
-        Bridge bridge2 = previousStrand.closerBridgeInNextStrand(spiderPos);
-        
-        if ( (bridge1 != null) && (bridge2 == null) ) { closerBridge = bridge1; }
-        else if ( (bridge1 == null) && (bridge2 != null) ) { closerBridge = bridge2; }
-        else if ( (bridge1 == null) && (bridge2 == null) ) { }
-        else{
-            closerBridge = ( ((bridge1.getStartingPoint()).distance(spiderPos)) <= ((bridge2.getFinalPoint()).distance(spiderPos)) ) ? bridge1 : bridge2;
-        }
-        
-        return closerBridge;
+    Bridge closerBridge = null;
+    Point spiderPos = spider.getPosition();
+
+    Strand actualStrand = strands.get(spidersit);
+    Strand previousStrand = (spidersit != 0) ? strands.get(spidersit-1) : strands.get(strands.size() - 1);
+
+    Bridge bridge1 = actualStrand.closerBridgeInStrand(spiderPos);
+    Bridge bridge2 = previousStrand.closerBridgeInNextStrand(spiderPos);
+
+    if ( (bridge1 != null) && (bridge2 == null) && !usedBridges.contains(bridge1)) {
+        closerBridge = bridge1;
+        spidersit = (spidersit + 1) % strands.size(); // Actualiza spidersit
     }
+    else if ( (bridge1 == null) && (bridge2 != null) && !usedBridges.contains(bridge2)) {
+        closerBridge = bridge2;
+        spidersit = (spidersit - 1 + strands.size()) % strands.size(); // Actualiza spidersit
+    }
+    else if ( (bridge1 != null) && (bridge2 != null) ) {
+        if (!usedBridges.contains(bridge1) && !usedBridges.contains(bridge2)) {
+            closerBridge = ( ((bridge1.getStartingPoint()).distance(spiderPos)) <= ((bridge2.getFinalPoint()).distance(spiderPos)) ) ? bridge1 : bridge2;
+            if (closerBridge == bridge1) {
+                spidersit = (spidersit + 1) % strands.size(); // Actualiza spidersit
+            } else {
+                spidersit = (spidersit - 1 + strands.size()) % strands.size(); // Actualiza spidersit
+            }
+        } else if (!usedBridges.contains(bridge1)) {
+            closerBridge = bridge1;
+            spidersit = (spidersit + 1) % strands.size(); // Actualiza spidersit
+        } else if (!usedBridges.contains(bridge2)) {
+            closerBridge = bridge2;
+            spidersit = (spidersit - 1 + strands.size()) % strands.size(); // Actualiza spidersit
+        }
+    }
+
+    // Si no se encontró un puente cercano, mueve a la araña al final del Strand
+    if (closerBridge == null && !hasexecuted) {
+        actualStrand = strands.get(spidersit);
+        System.out.println(spidersit);
+        spider.moveTo(actualStrand.getFinalPoint().xCoordinate(), actualStrand.getFinalPoint().yCoordinate());
+        hasexecuted = true;
+    }
+    return closerBridge;
+}
+
     
     public Point[] firstLast(Bridge bridge){
-        Point[] ordenatedPoints = new Point[2];
-        
-        Bridge closerBridge = searchSpiderNearestBridge();
-        
-        if ( (spider.getStrand()).pointInStartingBridgePoints(closerBridge.getStartingPoint()) ){
-            ordenatedPoints[0] = closerBridge.getStartingPoint();
-            ordenatedPoints[1] = closerBridge.getFinalPoint();
-        }
-        else{
-            ordenatedPoints[0] = closerBridge.getFinalPoint();
-            ordenatedPoints[1] = closerBridge.getStartingPoint();
-        }
-        
-        return ordenatedPoints;
+    Point[] ordenatedPoints = new Point[2];
+
+
+    // Verifica que closerBridge no sea null antes de intentar acceder a getStartingPoint()
+    if ( (spider.getStrand()).pointInStartingBridgePoints(bridge.getStartingPoint()) ){
+        ordenatedPoints[0] = bridge.getStartingPoint();
+        ordenatedPoints[1] = bridge.getFinalPoint();
     }
+    else{
+        ordenatedPoints[0] = bridge.getFinalPoint();
+        ordenatedPoints[1] = bridge.getStartingPoint();
+    }
+
+
+    return ordenatedPoints;
+}
     
     /**
      * Check if a point belongs to a spot of the web
@@ -135,6 +173,12 @@ public class Web{
     public void addBridge(String color, int distance, int firstStrand){
         // Verificar que el puente no existe ya
         strands.get(firstStrand).addBridge(color, distance);
+        Bridge newBridge = strands.get(firstStrand).getBridges().get(strands.get(firstStrand).getBridges().size() - 1);
+        if (!strandBridges.containsKey(firstStrand)) {
+            strandBridges.put(firstStrand, new ArrayList<>());
+        }
+        strandBridges.get(firstStrand).add(newBridge);
+
     }
     
     /**

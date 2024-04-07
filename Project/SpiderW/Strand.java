@@ -16,7 +16,8 @@ public class Strand{
     private boolean isVisible;
     private Spot spot;
     private ArrayList<Bridge> bridgesLocal = new ArrayList<>();
-    
+
+
     public boolean pointInStartingBridgePoints(Point point){
         for(Bridge b : bridgesLocal){
                 if( b.getStartingPoint() == point ){
@@ -27,34 +28,39 @@ public class Strand{
     }
     
     public Bridge closerBridgeInStrand(Point startingPoint){
-        if(bridgesLocal.size() > 0){
-            double lesserDistance = 9999999;
-            Bridge closerBridge = null;
-            for(Bridge b : bridgesLocal){
+    if(bridgesLocal.size() > 0){
+        double lesserDistance = 9999999;
+        Bridge closerBridge = null;
+        for(Bridge b : bridgesLocal){
+            if (!Web.usedBridges.contains(b)) { // Solo considera los puentes que no se han utilizado antes
                 double distance = startingPoint.distance(b.getStartingPoint());
                 if( distance < lesserDistance ){
                     lesserDistance = distance;
                     closerBridge = b;
                 }
             }
-            return closerBridge;
         }
-        else{
-            return null;
-        }
+        return closerBridge;
     }
+    else{
+        return null;
+    }
+}
     
     public Bridge closerBridgeInNextStrand(Point startingPoint){
         Bridge closerBridge = null;
-        if(bridgesLocal.size() > 0){
+        if(bridgesLocal.size() > 0) {
             double lesserDistance = 9999999;
-            for(Bridge b : bridgesLocal){
-                double distance = startingPoint.distance(b.getFinalPoint());
-                if( distance < lesserDistance ){
-                    lesserDistance = distance;
-                    closerBridge = b;
+            for (Bridge b : bridgesLocal) {
+                if (!Web.usedBridges.contains(b)) { // Solo considera los puentes que no se han utilizado antes
+                    double distance = startingPoint.distance(b.getStartingPoint());
+                    if (distance < lesserDistance) {
+                        lesserDistance = distance;
+                        closerBridge = b;
+                    }
                 }
             }
+            return closerBridge;
         }
         return closerBridge;
     }
@@ -216,4 +222,19 @@ public class Strand{
             }
         }
     }
+
+    public ArrayList<Bridge> getBridges(){
+        return bridgesLocal;
+    }
+
+    /**
+     * Retorna el punto de inicio del Strand.
+     * @return el punto de inicio del Strand.
+     */
+    public Point getStartingPoint() {
+        return line.getStartingPoint();
+    }
+
+
+
 }
