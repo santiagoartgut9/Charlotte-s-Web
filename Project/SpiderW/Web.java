@@ -34,22 +34,26 @@ private boolean spiderWalk1(Bridge objective){
     if(objective!=null){
         usedBridges.add(objective);
         Point[] directionPoints = firstLast(objective);
-
-        // Calcula las distancias a los puntos directionPoints
-        double distanceToStart = spider.getPosition().distance(directionPoints[0]);
-        double distanceToEnd = spider.getPosition().distance(directionPoints[1]);
-
-        // Determina cuál punto está más cerca
-        Point closerPoint = (distanceToStart < distanceToEnd) ? directionPoints[0] : directionPoints[1];
-        Point fartherPoint = (distanceToStart < distanceToEnd) ? directionPoints[1] : directionPoints[0];
-
-        // Mueve la araña al punto más cercano
-        spider.moveTo(closerPoint.xCoordinate(), closerPoint.yCoordinate());
-
-        // Cambia la dirección de la araña al punto más lejano
-        spider.switchDirection(fartherPoint);
-        spider.moveTo(fartherPoint.xCoordinate(), fartherPoint.yCoordinate());
-
+        spider.switchDirection(directionPoints[0]);
+        Point position0 = spider.getPosition();
+        while(((int)Math.round(spider.getPosition().xCoordinate()) != (int) Math.round(directionPoints[0].xCoordinate())) && ((int)Math.round(spider.getPosition().yCoordinate()) != (int) Math.round(directionPoints[0].yCoordinate()))){
+            spider.spiderWalk();
+        }
+        spider.switchDirection(directionPoints[1]);
+        while(((int)Math.round(spider.getPosition().xCoordinate()) != (int) Math.round(directionPoints[1].xCoordinate())) && ((int)Math.round(spider.getPosition().yCoordinate()) != (int) Math.round(directionPoints[1].yCoordinate()))) {
+            spider.spiderWalk();
+        }
+        Point position1 = spider.getPosition();
+        int currentStrandIndex = strands.indexOf(spider.getStrand());
+        if( ((position1.xCoordinate() <= position0.xCoordinate()) && (position0.yCoordinate() <= 240)) ){
+            spider.setStrand( strands.get((currentStrandIndex + 1) % strands.size()) );
+        }
+        else if ( ((position1.xCoordinate() >= position0.xCoordinate()) && (position0.yCoordinate() >= 240)) ){
+            spider.setStrand( strands.get((currentStrandIndex + 1) % strands.size()) );
+        }
+        else {
+            spider.setStrand( strands.get((currentStrandIndex - 1 + strands.size()) % strands.size()) );
+        }
         return spiderWalk1(searchSpiderNearestBridge());
     }
     else{
@@ -74,6 +78,7 @@ private boolean spiderWalk1(Bridge objective){
 
     }
     public Bridge searchSpiderNearestBridge(){
+    int i = strands.indexOf(spider.getStrand());
     Bridge closerBridge = null;
     Point spiderPos = spider.getPosition();
 
@@ -111,7 +116,6 @@ private boolean spiderWalk1(Bridge objective){
     // Si no se encontró un puente cercano, mueve a la araña al final del Strand
     if (closerBridge == null && !hasexecuted) {
         actualStrand = strands.get(spidersit);
-        System.out.println(spidersit);
         spider.moveTo(actualStrand.getFinalPoint().xCoordinate(), actualStrand.getFinalPoint().yCoordinate());
         hasexecuted = true;
     }
