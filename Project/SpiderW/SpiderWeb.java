@@ -69,6 +69,64 @@ public class SpiderWeb
     }
     
     /**
+     * Sits the spider in the strand specified
+     * @Param strand the strand to sit the spider
+     */
+    public void spiderSit(int strand){
+        web.spiderSit(strand);
+    }
+    
+    /**
+     * Makes the spider walk
+     * @Param advance boolean
+     */
+    public void spiderWalk(boolean advance){
+        web.spiderWalk(advance);
+    }
+    
+    /**
+     * Returns the last path of the spider
+     */
+    public int[] spiderLastPath(){
+        int[] a = new int[1];
+        return a;
+    }
+    
+    /**
+     * Returns the list of bridges in the web identified by their color
+     */
+    public String[] bridges(){
+        String[] a = new String[1];
+        return a;
+    }
+    
+    /**
+     * ??
+     * @Param color the color of the bridge
+     */
+    public int[] bridge(String color){
+        int[] a = new int[1];
+        return a;
+    }
+    
+    /**
+     * Returns an array with the spots actually in the web
+     */
+    public String[] spots(){
+        String[] a = new String[1];
+        return a;
+    }
+    
+    /**
+     * ??
+     * @Param color the color of the spot
+     */
+    public int[] spot(String color){
+        int[] a = new int[1];
+        return a;
+    }
+    
+    /**
      * Make the Web visible. If it was already visible, do nothing.
      */
     public void makeVisible(){
@@ -84,7 +142,26 @@ public class SpiderWeb
         isVisible = false;
     }
     
+    /**
+     * Finish the simulator
+     */
+    public void finish(){
+        makeInvisible();
+    }
     
+    /**
+     * Returns if the last operation did correctly
+     */
+    public void ok(){
+        //??
+    }
+    
+    /**
+     * Prints simulator's information
+     */
+    public void getSimulatorInformation(){
+        //??
+    }
     
     /*
      * Draw the Web with current specifications on screen.

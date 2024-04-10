@@ -54,20 +54,6 @@ public class Bridge{
         isVisible = false;
     }
     
-    /**
-     * Return the starting point of the bridge
-     */
-    public Point getStartingPoint(){
-        return points[0];
-    }
-    
-    /**
-     * Return the final point of the bridge
-     */
-    public Point getFinalPoint(){
-        return points[1];
-    }
-    
     /*
      * Draw the bridge with current specifications on screen.
      */
@@ -90,5 +76,19 @@ public class Bridge{
             }
             line.makeInvisible();
         }
+    }
+    
+    /**
+     * Return the starting point of the bridge
+     */
+    public Point getStartingPoint(){
+        return points[0];
+    }
+    
+    /**
+     * Return the final point of the bridge
+     */
+    public Point getFinalPoint(){
+        return points[1];
     }
 }

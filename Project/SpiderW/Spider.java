@@ -13,18 +13,9 @@ public class Spider{
     private Circle body;
     private Point direction;
     private Line[] legs;
-    private String color;
     private boolean isVisible;
     private Strand strand;
     private Web web;
-    
-    /** Returns the position of the spider as a point
-     */
-    public Point getPosition(){
-        double x0 = body.xCoordinate()+8;
-        double y0 = body.yCoordinate()+8;
-        return new Point(x0, y0);
-    }
     
     
     /**
@@ -41,6 +32,29 @@ public class Spider{
         fillRightLegs();
         
         isVisible = false;
+    }
+    
+    /** Returns the position of the spider as a point
+     */
+    public Point getPosition(){
+        double x0 = body.xCoordinate()+8;
+        double y0 = body.yCoordinate()+8;
+        return new Point(x0, y0);
+    }
+    
+    /**
+     * Sits the spider on the center of the web
+     */
+    public void sit(){
+        moveTo(427, 240);
+    }
+    
+    /**
+     * Switchs the spider's direction
+     * @param _direction the new direction's point
+     */
+    public void switchDirection(Point _direction){
+        direction = _direction;
     }
     
     /**
@@ -82,19 +96,63 @@ public class Spider{
                 l.moveTo(l.xCoordinate() + deltaX, l.yCoordinate() + deltaY);
             }
             draw();
-        //for (;;){
-        //    Point position = new Point(body.xCoordinate(), body.yCoordinate());
-        //    if(Web.pointIsSpot(position)){
-        //        break;
-        //        //switchDirection(obtenerotroextremo);
-        //    }
-        //    body.moveTo(body.xCoordinate() + deltaX, body.yCoordinate() + deltaY);
-        //    for(Line l : legs){
-        //        l.moveTo(l.xCoordinate() + deltaX, l.yCoordinate() + deltaY);
-        //    }
-        //    draw();
         }
     
+    /**
+     * Move the spider to a specific coordinate.
+     * @param xPosition the x coordinate of the spider
+     * @param yPosition the y coordinate of the spider
+     */
+    public void moveTo(double xPosition, double yPosition){
+        erase();
+        double deltaX = xPosition - body.xCoordinate();
+        double deltaY = yPosition - body.yCoordinate();
+        body.moveTo(xPosition - 8, yPosition - 8);
+        for(Line l : legs){
+            l.moveTo(l.xCoordinate() + deltaX -8, l.yCoordinate() + deltaY -8);
+        }
+        draw();
+    }
+    
+    /**
+     * Make this spider visible. If it was already visible, do nothing.
+     */
+    public void makeVisible(){
+        isVisible = true;
+        draw();
+    }
+    
+    /**
+     * Make this spider invisible. If it was already invisible, do nothing.
+     */
+    public void makeInvisible(){
+        erase();
+        isVisible = false;
+    }
+    
+    /*
+     * Draw the spider with current specifications on screen.
+     */
+    private void draw(){
+        if(isVisible) {
+            body.makeVisible();
+            for(Line l : legs){
+                l.makeVisible();
+            }
+        }
+    }
+
+    /*
+     * Erase the spider on screen.
+     */
+    private void erase(){
+        if(isVisible) {
+            body.makeInvisible();
+            for(Line l : legs){
+                l.makeInvisible();
+            }
+        }
+    }
     
     /**
      * Calculate the angle between the spider's direction and her position
@@ -148,85 +206,26 @@ public class Spider{
     }
     
     /**
-     * Make this spider visible. If it was already visible, do nothing.
+     * Sets the strand to the newStrand
+     * @Param newStrand the strand to be setted
      */
-    public void makeVisible(){
-        isVisible = true;
-        draw();
-    }
-    
-    /**
-     * Make this spider invisible. If it was already invisible, do nothing.
-     */
-    public void makeInvisible(){
-        erase();
-        isVisible = false;
-    }
-    
-    /**
-     * Move the spider to a specific coordinate.
-     * @param xPosition the x coordinate of the spider
-     * @param yPosition the y coordinate of the spider
-     */
-    public void moveTo(double xPosition, double yPosition){
-        erase();
-        double deltaX = xPosition - body.xCoordinate();
-        double deltaY = yPosition - body.yCoordinate();
-        body.moveTo(xPosition - 8, yPosition - 8);
-        for(Line l : legs){
-            l.moveTo(l.xCoordinate() + deltaX -8, l.yCoordinate() + deltaY -8);
-        }
-        draw();
-    }
-    
-    /**
-     * Switchs the spider's direction
-     * @param _direction the new direction's point
-     */
-    public void switchDirection(Point _direction){
-        direction = _direction;
-    }
-    
-    /**
-     * Sits the spider on the center of the web
-     */
-    public void sit(){
-        moveTo(427, 240);
-    }
-    
     public void setStrand(Strand newStrand){
         strand = newStrand;
     }
     
+    /**
+     * Returns the actual strand
+     */
     public Strand getStrand(){
         return strand;
     }
     
+    /**
+     * Returns the actual strand's spot
+     */
     public Point getActualStrandSpot(){
         return strand.getFinalPoint();
     }
     
-    /*
-     * Draw the spider with current specifications on screen.
-     */
-    private void draw(){
-        if(isVisible) {
-            body.makeVisible();
-            for(Line l : legs){
-                l.makeVisible();
-            }
-        }
-    }
-
-    /*
-     * Erase the spider on screen.
-     */
-    private void erase(){
-        if(isVisible) {
-            body.makeInvisible();
-            for(Line l : legs){
-                l.makeInvisible();
-            }
-        }
-    }
+    
 }

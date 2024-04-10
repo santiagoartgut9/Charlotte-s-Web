@@ -17,48 +17,6 @@ public class Strand{
     private Spot spot;
     private ArrayList<Bridge> bridgesLocal = new ArrayList<>();
     
-    public boolean pointInStartingBridgePoints(Point point){
-        for(Bridge b : bridgesLocal){
-                if( b.getStartingPoint() == point ){
-                    return true;
-                }
-            }
-        return false;
-    }
-    
-    public Bridge closerBridgeInStrand(Point startingPoint){
-        if(bridgesLocal.size() > 0){
-            double lesserDistance = 9999999;
-            Bridge closerBridge = null;
-            for(Bridge b : bridgesLocal){
-                double distance = startingPoint.distance(b.getStartingPoint());
-                if( distance < lesserDistance ){
-                    lesserDistance = distance;
-                    closerBridge = b;
-                }
-            }
-            return closerBridge;
-        }
-        else{
-            return null;
-        }
-    }
-    
-    public Bridge closerBridgeInNextStrand(Point startingPoint){
-        Bridge closerBridge = null;
-        if(bridgesLocal.size() > 0){
-            double lesserDistance = 9999999;
-            for(Bridge b : bridgesLocal){
-                double distance = startingPoint.distance(b.getFinalPoint());
-                if( distance < lesserDistance ){
-                    lesserDistance = distance;
-                    closerBridge = b;
-                }
-            }
-        }
-        return closerBridge;
-    }
-    
     
     /**
      * Create a Strand with a specific starting point and a final one, almacenates the angle of the strand and the initial alpha
@@ -99,18 +57,13 @@ public class Strand{
     }
     
     /**
-     * Checks if the color of any of its bridges is the specified, false other case
-     * @Param color the color to check
+     * Relocates a bridge from the simulator
+     * @Param color the color of the bridge to relocate
+     * @Param distance the distance from the origin to relocate
      */
-    public boolean checkBridge(String color){
-        if(bridgesLocal.size()>0) {
-                for(Bridge b : bridgesLocal){
-                    if(b.checkBridge(color)){
-                        return true;
-                    }
-                }
-            }
-        return false;
+    public void relocateBridge(String color, int distance){
+        delBridge(color);
+        addBridge(color, distance);
     }
     
     /**
@@ -128,33 +81,12 @@ public class Strand{
     }
     
     /**
-     * Relocates a bridge from the simulator
-     * @Param color the color of the bridge to relocate
-     * @Param distance the distance from the origin to relocate
-     */
-    public void relocateBridge(String color, int distance){
-        delBridge(color);
-        addBridge(color, distance);
-    }
-    
-    /**
      * Adds a Spot to the simulator
      * @Param color the color of the spot
      */
     public void addSpot(String color){
         spot = new Spot(color, finalP);
         spot.makeVisible();
-    }
-    
-    /**
-     * Checks if the color of the spot is the specified, false other case
-     * @Param color the color to check
-     */
-    public boolean checkSpot(String color){
-        if(spot!=null) {
-                return spot.checkSpot(color);
-            }
-        return false;
     }
     
     /**
@@ -181,10 +113,6 @@ public class Strand{
     public void makeInvisible(){
         erase();
         isVisible = false;
-    }
-    
-    public Point getFinalPoint(){
-        return finalP;
     }
     
     /*
@@ -216,4 +144,93 @@ public class Strand{
             }
         }
     }
+    
+    /**
+     * Checks if the color of any of its bridges is the specified, false other case
+     * @Param color the color to check
+     */
+    public boolean checkBridge(String color){
+        if(bridgesLocal.size()>0) {
+                for(Bridge b : bridgesLocal){
+                    if(b.checkBridge(color)){
+                        return true;
+                    }
+                }
+            }
+        return false;
+    }
+    
+    /**
+     * Checks if the color of the spot is the specified, false other case
+     * @Param color the color to check
+     */
+    public boolean checkSpot(String color){
+        if(spot!=null) {
+                return spot.checkSpot(color);
+            }
+        return false;
+    }
+    
+    /**
+     * Checks if the a point is in the bridgeLocal's starting points
+     * @Param point the point to check
+     */
+    public boolean pointInStartingBridgePoints(Point point){
+        for(Bridge b : bridgesLocal){
+                if( b.getStartingPoint() == point ){
+                    return true;
+                }
+            }
+        return false;
+    }
+    
+    /**
+     * Returns the closer bridge in the strand next to the specified starting point
+     * @Param startingPoint the point to check
+     */
+    public Bridge closerBridgeInStrand(Point startingPoint){
+        if(bridgesLocal.size() > 0){
+            double lesserDistance = 9999999;
+            Bridge closerBridge = null;
+            for(Bridge b : bridgesLocal){
+                double distance = startingPoint.distance(b.getStartingPoint());
+                if( distance < lesserDistance ){
+                    lesserDistance = distance;
+                    closerBridge = b;
+                }
+            }
+            return closerBridge;
+        }
+        else{
+            return null;
+        }
+    }
+    
+    /**
+     * Returns the closer bridge in the strand next to the specified starting point
+     * @Param startingPoint the point to check
+     */
+    public Bridge closerBridgeInNextStrand(Point startingPoint){
+        Bridge closerBridge = null;
+        if(bridgesLocal.size() > 0){
+            double lesserDistance = 9999999;
+            for(Bridge b : bridgesLocal){
+                double distance = startingPoint.distance(b.getFinalPoint());
+                if( distance < lesserDistance ){
+                    lesserDistance = distance;
+                    closerBridge = b;
+                }
+            }
+        }
+        return closerBridge;
+    }
+    
+    /**
+     * Returns the final point of the strand
+     */
+    public Point getFinalPoint(){
+        return finalP;
+    }
+    
+    
 }

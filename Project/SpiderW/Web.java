@@ -19,100 +19,6 @@ public class Web{
     private boolean isVisible;
     private Spider spider;
     
-    public void spiderSit(int strand){
-        spider.sit();
-        spider.setStrand(strands.get(strand));
-    }
-    
-    private boolean spiderWalk(Bridge objective){
-        if(objective!=null){
-            Point[] directionPoints = firstLast(objective);
-            spider.switchDirection(directionPoints[0]);
-            Point position0 = spider.getPosition();
-            while(!((spider.getPosition()).equals(directionPoints[0]))){
-                spider.spiderWalk();
-            }
-            spider.switchDirection(directionPoints[1]);
-            while(!((spider.getPosition()).equals(directionPoints[1]))){
-                spider.spiderWalk();
-            }
-            Point position1 = spider.getPosition();
-            if( ((position1.xCoordinate() <= position0.xCoordinate()) && (position0.yCoordinate() <= 240)) ){
-                spider.setStrand( strands.get((strands.indexOf(spider.getStrand())) + 1) );
-            }
-            else if ( ((position1.xCoordinate() >= position0.xCoordinate()) && (position0.yCoordinate() >= 240)) ){
-                spider.setStrand( strands.get((strands.indexOf(spider.getStrand())) + 1) );
-            }
-            else { spider.setStrand( strands.get((strands.indexOf(spider.getStrand())) - 1) ); }
-            return spiderWalk(searchSpiderNearestBridge());
-        }
-        else{
-            Point direction = spider.getActualStrandSpot();
-            while(!((spider.getPosition()).equals(direction))){
-                spider.spiderWalk();
-            }
-            return true;
-        }
-    }
-    
-    public void spiderWalk(boolean advance){
-        if(advance){
-            boolean finished = spiderWalk(searchSpiderNearestBridge());
-        }
-    }
-    
-    public Bridge searchSpiderNearestBridge(){
-        int i = strands.indexOf(spider.getStrand());
-        Bridge closerBridge = null;
-        Point spiderPos = spider.getPosition();
-        
-        Strand actualStrand = strands.get(i);
-        Strand previousStrand = (i != 0) ? strands.get(i-1) : strands.get(strands.size() - 1);
-        
-        Bridge bridge1 = actualStrand.closerBridgeInStrand(spiderPos);
-        Bridge bridge2 = previousStrand.closerBridgeInNextStrand(spiderPos);
-        
-        if ( (bridge1 != null) && (bridge2 == null) ) { closerBridge = bridge1; }
-        else if ( (bridge1 == null) && (bridge2 != null) ) { closerBridge = bridge2; }
-        else if ( (bridge1 == null) && (bridge2 == null) ) { }
-        else{
-            closerBridge = ( ((bridge1.getStartingPoint()).distance(spiderPos)) <= ((bridge2.getFinalPoint()).distance(spiderPos)) ) ? bridge1 : bridge2;
-        }
-        
-        return closerBridge;
-    }
-    
-    public Point[] firstLast(Bridge bridge){
-        Point[] ordenatedPoints = new Point[2];
-        
-        Bridge closerBridge = searchSpiderNearestBridge();
-        
-        if ( (spider.getStrand()).pointInStartingBridgePoints(closerBridge.getStartingPoint()) ){
-            ordenatedPoints[0] = closerBridge.getStartingPoint();
-            ordenatedPoints[1] = closerBridge.getFinalPoint();
-        }
-        else{
-            ordenatedPoints[0] = closerBridge.getFinalPoint();
-            ordenatedPoints[1] = closerBridge.getStartingPoint();
-        }
-        
-        return ordenatedPoints;
-    }
-    
-    /**
-     * Check if a point belongs to a spot of the web
-     * @Param _point the point to check
-     */
-    public static boolean pointIsSpot(Point _point){
-        for(Point p : spots.values()){
-            if(p.equals(_point)){
-                return true;
-            }
-        }
-        
-        return false;
-    }
-    
     /**
      * Create the web with a specific quantity of strands and a radius
      * @Param _strands quantity of strands in the web
@@ -123,83 +29,6 @@ public class Web{
         fillStrands(_strands, radius);
         spider = new Spider(this, strands.get(0));
         
-        isVisible = false;
-    }
-    
-    /**
-     * Adds a bridge to the simulator
-     * @Param color color of the bridge
-     * @Param distance the distance of the bridge from the origin
-     * @Param firstStrand the strand with the origin of the bridge
-     */
-    public void addBridge(String color, int distance, int firstStrand){
-        // Verificar que el puente no existe ya
-        strands.get(firstStrand).addBridge(color, distance);
-    }
-    
-    /**
-     * Deletes a bridge from the simulator
-     * @Param color the color of the bridge to delete
-     */
-    public void delBridge(String color){
-        bridges.remove(color);
-        for(Strand s : strands){
-            if(s.checkBridge(color)){
-                s.delBridge(color);
-            }
-        }
-    }
-    
-    /**
-     * Relocates a bridge from the simulator
-     * @Param color the color ofthe bridge to relocate
-     * @Param distance the new distance from the origin
-     */
-    public void relocateBridge(String color, int distance){
-        bridges.remove(color);
-        for(Strand s : strands){
-            if(s.checkBridge(color)){
-                s.relocateBridge(color, distance);
-            }
-        }
-    }
-    
-    /**
-     * Adds a spot to the simulator
-     * @Param color the color of the spot
-     * @Param strand the strand where the spot is
-     */
-    public void addSpot(String color, int strand){
-        // Verificar que no exista
-        strands.get(strand).addSpot(color);
-    }
-    
-    /**
-     * Deletes a spot from the simulator
-     * @Param color the color of the spot to delete
-     */
-    public void delSpot(String color){
-        spots.remove(color);
-        for(Strand s : strands){
-            if(s.checkSpot(color)){
-                s.delSpot();
-            }
-        }
-    }
-    
-    /**
-     * Make the Web visible. If it was already visible, do nothing.
-     */
-    public void makeVisible(){
-        isVisible = true;
-        draw();
-    }
-    
-    /**
-     * Make the Web invisible. If it was already invisible, do nothing.
-     */
-    public void makeInvisible(){
-        erase();
         isVisible = false;
     }
     
@@ -233,8 +62,117 @@ public class Web{
             cont = cont + 2;
         }
     }
-
     
+    /**
+     * Adds a bridge to the simulator
+     * @Param color color of the bridge
+     * @Param distance the distance of the bridge from the origin
+     * @Param firstStrand the strand with the origin of the bridge
+     */
+    public void addBridge(String color, int distance, int firstStrand){
+        // Verificar que el puente no existe ya
+        strands.get(firstStrand).addBridge(color, distance);
+    }
+    
+    /**
+     * Relocates a bridge from the simulator
+     * @Param color the color ofthe bridge to relocate
+     * @Param distance the new distance from the origin
+     */
+    public void relocateBridge(String color, int distance){
+        bridges.remove(color);
+        for(Strand s : strands){
+            if(s.checkBridge(color)){
+                s.relocateBridge(color, distance);
+            }
+        }
+    }
+    
+    /**
+     * Deletes a bridge from the simulator
+     * @Param color the color of the bridge to delete
+     */
+    public void delBridge(String color){
+        bridges.remove(color);
+        for(Strand s : strands){
+            if(s.checkBridge(color)){
+                s.delBridge(color);
+            }
+        }
+    }
+    
+    /**
+     * Adds a spot to the simulator
+     * @Param color the color of the spot
+     * @Param strand the strand where the spot is
+     */
+    public void addSpot(String color, int strand){
+        // Verificar que no exista
+        strands.get(strand).addSpot(color);
+    }
+    
+    /**
+     * Deletes a spot from the simulator
+     * @Param color the color of the spot to delete
+     */
+    public void delSpot(String color){
+        spots.remove(color);
+        for(Strand s : strands){
+            if(s.checkSpot(color)){
+                s.delSpot();
+            }
+        }
+    }
+    
+    /**
+     * Returns the list of bridges in the web identified by their color
+     */
+    public String[] bridges(){
+        String[] a = new String[1];
+        return a;
+    }
+    
+    /**
+     * ??
+     * @Param color the color of the bridge
+     */
+    public int[] bridge(String color){
+        int[] a = new int[1];
+        return a;
+    }
+    
+    /**
+     * Returns an array with the spots actually in the web
+     */
+    public String[] spots(){
+        String[] a = new String[1];
+        return a;
+    }
+    
+    /**
+     * ??
+     * @Param color the color of the spot
+     */
+    public int[] spot(String color){
+        int[] a = new int[1];
+        return a;
+    }
+    
+    /**
+     * Make the Web visible. If it was already visible, do nothing.
+     */
+    public void makeVisible(){
+        isVisible = true;
+        draw();
+    }
+    
+    /**
+     * Make the Web invisible. If it was already invisible, do nothing.
+     */
+    public void makeInvisible(){
+        erase();
+        isVisible = false;
+    }
     
     /*
      * Draw the Web with current specifications on screen.
@@ -261,6 +199,135 @@ public class Web{
             spider.makeVisible();
         }
     }
+    
+    
+    /**
+     * Sits the spider in the strand specified
+     * @Param strand the strand to sit the spider
+     */
+    public void spiderSit(int strand){
+        spider.sit();
+        spider.setStrand(strands.get(strand));
+    }
+    
+    /**
+     * Makes the spider walk
+     * @Param bridge The closest bridge to walk
+     */
+    private boolean spiderWalk(Bridge objective){
+        if(objective!=null){
+            Point[] directionPoints = firstLast(objective);
+            spider.switchDirection(directionPoints[0]);
+            Point position0 = spider.getPosition();
+            while(!((spider.getPosition()).equals(directionPoints[0]))){
+                spider.spiderWalk();
+            }
+            spider.switchDirection(directionPoints[1]);
+            while(!((spider.getPosition()).equals(directionPoints[1]))){
+                spider.spiderWalk();
+            }
+            Point position1 = spider.getPosition();
+            if( ((position1.xCoordinate() <= position0.xCoordinate()) && (position0.yCoordinate() <= 240)) ){
+                spider.setStrand( strands.get((strands.indexOf(spider.getStrand())) + 1) );
+            }
+            else if ( ((position1.xCoordinate() >= position0.xCoordinate()) && (position0.yCoordinate() >= 240)) ){
+                spider.setStrand( strands.get((strands.indexOf(spider.getStrand())) + 1) );
+            }
+            else { spider.setStrand( strands.get((strands.indexOf(spider.getStrand())) - 1) ); }
+            return spiderWalk(searchSpiderNearestBridge());
+            }
+        else{
+            Point direction = spider.getActualStrandSpot();
+            while(!((spider.getPosition()).equals(direction))){
+                spider.spiderWalk();
+            }
+            return true;
+        }
+    }
+    
+    /**
+     * Makes the spider walk
+     * @Param advance boolean
+     */
+    public void spiderWalk(boolean advance){
+        if(advance){
+            boolean finished = spiderWalk(searchSpiderNearestBridge());
+        }
+    }
+    
+    /**
+     * Searchs the nearest bridge to the spider
+     */
+    public Bridge searchSpiderNearestBridge(){
+        int i = strands.indexOf(spider.getStrand());
+        Bridge closerBridge = null;
+        Point spiderPos = spider.getPosition();
+        
+        Strand actualStrand = strands.get(i);
+        Strand previousStrand = (i != 0) ? strands.get(i-1) : strands.get(strands.size() - 1);
+        
+        Bridge bridge1 = actualStrand.closerBridgeInStrand(spiderPos);
+        Bridge bridge2 = previousStrand.closerBridgeInNextStrand(spiderPos);
+        
+        if ( (bridge1 != null) && (bridge2 == null) ) { closerBridge = bridge1; }
+        else if ( (bridge1 == null) && (bridge2 != null) ) { closerBridge = bridge2; }
+        else if ( (bridge1 == null) && (bridge2 == null) ) { }
+        else{
+            closerBridge = ( ((bridge1.getStartingPoint()).distance(spiderPos)) <= ((bridge2.getFinalPoint()).distance(spiderPos)) ) ? bridge1 : bridge2;
+        }
+        
+        return closerBridge;
+    }
+    
+    /**
+     * Returns an array with the actual strand spider's bridge point first
+     */
+    public Point[] firstLast(Bridge bridge){
+        Point[] ordenatedPoints = new Point[2];
+        
+        Bridge closerBridge = searchSpiderNearestBridge();
+        
+        if ( (spider.getStrand()).pointInStartingBridgePoints(closerBridge.getStartingPoint()) ){
+            ordenatedPoints[0] = closerBridge.getStartingPoint();
+            ordenatedPoints[1] = closerBridge.getFinalPoint();
+        }
+        else{
+            ordenatedPoints[0] = closerBridge.getFinalPoint();
+            ordenatedPoints[1] = closerBridge.getStartingPoint();
+        }
+        
+        return ordenatedPoints;
+    }
+    
+    /**
+     * Check if a point belongs to a spot of the web
+     * @Param _point the point to check
+     */
+    public static boolean pointIsSpot(Point _point){
+        for(Point p : spots.values()){
+            if(p.equals(_point)){
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    
+    
+    
     
     
     

@@ -77,18 +77,6 @@ public class Point
         isVisible = false;
     }
     
-    /**
-     * Move the point to a specific coordinate.
-     * @param xPosition the x coordinate where to move
-     * @param yPosition the y coordinate where to move
-     */
-    public void moveTo(double xPosition, double yPosition){
-        erase();
-        xCoord = xPosition;
-        yCoord = yPosition;
-        draw();
-    }
-    
     /*
      * Draws the point's representation
      */
@@ -105,6 +93,18 @@ public class Point
         if(isVisible) {
             representation.makeInvisible();
         }
+    }
+    
+    /**
+     * Move the point to a specific coordinate.
+     * @param xPosition the x coordinate where to move
+     * @param yPosition the y coordinate where to move
+     */
+    public void moveTo(double xPosition, double yPosition){
+        erase();
+        xCoord = xPosition;
+        yCoord = yPosition;
+        draw();
     }
     
     /**
