@@ -94,6 +94,10 @@ public class Line{
         return points[0].yCoordinate();
     }
     
+    public Point getStartingPoint(){
+        return points[0];
+    }
+    
     
     /*
      * Draw the line with current specifications on screen.

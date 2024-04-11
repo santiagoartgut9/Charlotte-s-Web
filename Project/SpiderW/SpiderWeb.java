@@ -22,8 +22,6 @@ public class SpiderWeb
         isVisible = false;
     }
     
-    
-    
     /**
      * Adds a bridge to the simulator
      * @Param color the color of the bridge

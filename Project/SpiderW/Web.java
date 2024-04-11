@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.ArrayDeque;
 //import java.util.Map;
 
 /**
@@ -18,6 +19,10 @@ public class Web{
     public static Point origin;
     private boolean isVisible;
     private Spider spider;
+    public static ArrayDeque<Object> usedBridges = new ArrayDeque<>();
+    private HashMap<Integer, ArrayList<Bridge>> strandBridges = new HashMap<>();
+    private int spidersit;
+    private boolean hasexecuted = false;
     
     /**
      * Create the web with a specific quantity of strands and a radius
@@ -200,104 +205,121 @@ public class Web{
         }
     }
     
-    
-    /**
-     * Sits the spider in the strand specified
-     * @Param strand the strand to sit the spider
-     */
-    public void spiderSit(int strand){
+        public void spiderSit(int strand){
         spider.sit();
         spider.setStrand(strands.get(strand));
+        this.spidersit = strand;
     }
-    
-    /**
-     * Makes the spider walk
-     * @Param bridge The closest bridge to walk
-     */
-    private boolean spiderWalk(Bridge objective){
+    private boolean spiderWalk1(Bridge objective){
         if(objective!=null){
+            usedBridges.add(objective);
             Point[] directionPoints = firstLast(objective);
             spider.switchDirection(directionPoints[0]);
             Point position0 = spider.getPosition();
-            while(!((spider.getPosition()).equals(directionPoints[0]))){
+            while(((int)Math.round(spider.getPosition().xCoordinate()) != (int) Math.round(directionPoints[0].xCoordinate())) && ((int)Math.round(spider.getPosition().yCoordinate()) != (int) Math.round(directionPoints[0].yCoordinate()))){
                 spider.spiderWalk();
             }
             spider.switchDirection(directionPoints[1]);
-            while(!((spider.getPosition()).equals(directionPoints[1]))){
+            while(((int)Math.round(spider.getPosition().xCoordinate()) != (int) Math.round(directionPoints[1].xCoordinate())) && ((int)Math.round(spider.getPosition().yCoordinate()) != (int) Math.round(directionPoints[1].yCoordinate()))) {
                 spider.spiderWalk();
             }
             Point position1 = spider.getPosition();
+            int currentStrandIndex = strands.indexOf(spider.getStrand());
             if( ((position1.xCoordinate() <= position0.xCoordinate()) && (position0.yCoordinate() <= 240)) ){
-                spider.setStrand( strands.get((strands.indexOf(spider.getStrand())) + 1) );
+                spider.setStrand( strands.get((currentStrandIndex + 1) % strands.size()) );
             }
             else if ( ((position1.xCoordinate() >= position0.xCoordinate()) && (position0.yCoordinate() >= 240)) ){
-                spider.setStrand( strands.get((strands.indexOf(spider.getStrand())) + 1) );
+                spider.setStrand( strands.get((currentStrandIndex + 1) % strands.size()) );
             }
-            else { spider.setStrand( strands.get((strands.indexOf(spider.getStrand())) - 1) ); }
-            return spiderWalk(searchSpiderNearestBridge());
+            else {
+                spider.setStrand( strands.get((currentStrandIndex - 1 + strands.size()) % strands.size()) );
             }
+            return spiderWalk1(searchSpiderNearestBridge());
+        }
         else{
-            Point direction = spider.getActualStrandSpot();
-            while(!((spider.getPosition()).equals(direction))){
-                spider.spiderWalk();
-            }
             return true;
         }
     }
     
-    /**
-     * Makes the spider walk
-     * @Param advance boolean
-     */
     public void spiderWalk(boolean advance){
         if(advance){
-            boolean finished = spiderWalk(searchSpiderNearestBridge());
+            Bridge nearestBridge = searchSpiderNearestBridge();
+            if(nearestBridge != null){
+                boolean finished = spiderWalk1(nearestBridge);
+                if(finished){
+                    spiderWalk(advance);
+                }
+            }
+        }else {
+                Strand actualStrand = spider.getStrand();
+                spider.moveTo(actualStrand.getStartingPoint().xCoordinate(), actualStrand.getStartingPoint().yCoordinate());
+            }
         }
-    }
-    
-    /**
-     * Searchs the nearest bridge to the spider
-     */
+        
     public Bridge searchSpiderNearestBridge(){
         int i = strands.indexOf(spider.getStrand());
         Bridge closerBridge = null;
         Point spiderPos = spider.getPosition();
         
-        Strand actualStrand = strands.get(i);
-        Strand previousStrand = (i != 0) ? strands.get(i-1) : strands.get(strands.size() - 1);
+        Strand actualStrand = strands.get(spidersit);
+        Strand previousStrand = (spidersit != 0) ? strands.get(spidersit-1) : strands.get(strands.size() - 1);
         
         Bridge bridge1 = actualStrand.closerBridgeInStrand(spiderPos);
         Bridge bridge2 = previousStrand.closerBridgeInNextStrand(spiderPos);
         
-        if ( (bridge1 != null) && (bridge2 == null) ) { closerBridge = bridge1; }
-        else if ( (bridge1 == null) && (bridge2 != null) ) { closerBridge = bridge2; }
-        else if ( (bridge1 == null) && (bridge2 == null) ) { }
-        else{
-            closerBridge = ( ((bridge1.getStartingPoint()).distance(spiderPos)) <= ((bridge2.getFinalPoint()).distance(spiderPos)) ) ? bridge1 : bridge2;
+        if ( (bridge1 != null) && (bridge2 == null) && !usedBridges.contains(bridge1)) {
+            closerBridge = bridge1;
+            spidersit = (spidersit + 1) % strands.size(); // Actualiza spidersit
+        }
+        else if ( (bridge1 == null) && (bridge2 != null) && !usedBridges.contains(bridge2)) {
+            closerBridge = bridge2;
+            spidersit = (spidersit - 1 + strands.size()) % strands.size(); // Actualiza spidersit
+        }
+        else if ( (bridge1 != null) && (bridge2 != null) ) {
+            if (!usedBridges.contains(bridge1) && !usedBridges.contains(bridge2)) {
+                closerBridge = ( ((bridge1.getStartingPoint()).distance(spiderPos)) <= ((bridge2.getFinalPoint()).distance(spiderPos)) ) ? bridge1 : bridge2;
+                if (closerBridge == bridge1) {
+                    spidersit = (spidersit + 1) % strands.size(); // Actualiza spidersit
+                } else {
+                    spidersit = (spidersit - 1 + strands.size()) % strands.size(); // Actualiza spidersit
+                }
+            } else if (!usedBridges.contains(bridge1)) {
+                closerBridge = bridge1;
+                spidersit = (spidersit + 1) % strands.size(); // Actualiza spidersit
+            } else if (!usedBridges.contains(bridge2)) {
+                closerBridge = bridge2;
+                spidersit = (spidersit - 1 + strands.size()) % strands.size(); // Actualiza spidersit
+            }
         }
         
+        // Si no se encontró un puente cercano, mueve a la araña al final del Strand
+        if (closerBridge == null && !hasexecuted) {
+            actualStrand = strands.get(spidersit);
+            spider.moveTo(actualStrand.getFinalPoint().xCoordinate(), actualStrand.getFinalPoint().yCoordinate());
+            hasexecuted = true;
+        }
         return closerBridge;
     }
     
-    /**
-     * Returns an array with the actual strand spider's bridge point first
-     */
-    public Point[] firstLast(Bridge bridge){
-        Point[] ordenatedPoints = new Point[2];
         
-        Bridge closerBridge = searchSpiderNearestBridge();
+        public Point[] firstLast(Bridge bridge){
+            Point[] ordenatedPoints = new Point[2];
         
-        if ( (spider.getStrand()).pointInStartingBridgePoints(closerBridge.getStartingPoint()) ){
-            ordenatedPoints[0] = closerBridge.getStartingPoint();
-            ordenatedPoints[1] = closerBridge.getFinalPoint();
-        }
-        else{
-            ordenatedPoints[0] = closerBridge.getFinalPoint();
-            ordenatedPoints[1] = closerBridge.getStartingPoint();
-        }
         
-        return ordenatedPoints;
+            // Verifica que closerBridge no sea null antes de intentar acceder a getStartingPoint()
+            if ( (spider.getStrand()).pointInStartingBridgePoints(bridge.getStartingPoint()) ){
+                ordenatedPoints[0] = bridge.getStartingPoint();
+                ordenatedPoints[1] = bridge.getFinalPoint();
+            }
+            else{
+                ordenatedPoints[0] = bridge.getFinalPoint();
+                ordenatedPoints[1] = bridge.getStartingPoint();
+            }
+        
+        
+            return ordenatedPoints;
     }
+    
     
     /**
      * Check if a point belongs to a spot of the web
@@ -328,7 +350,7 @@ public class Web{
     
     
     
-    
+ 
     
     
     /**
